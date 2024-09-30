@@ -1,101 +1,123 @@
-import Image from "next/image";
+"use client";
+
+import RecipeCard from "@/components/custom/RecipeCard";
+import { useState } from "react";
+
+interface Comment {
+  id: number;
+  author: string;
+  text: string;
+}
+
+export interface Recipe {
+  id: number;
+  title: string;
+  author: string;
+  image: string;
+  description: string;
+  rating: number;
+  votes: number;
+  comments: Comment[];
+  createdAt: Date;
+}
+
+const mockRecipes: Recipe[] = [
+  {
+    id: 1,
+    title: "Spaghetti Carbonara",
+    author: "Chef Mario",
+    image: "/placeholder.svg?height=300&width=400",
+    description:
+      "A classic Italian pasta dish with eggs, cheese, and pancetta.",
+    rating: 4.5,
+    votes: 120,
+    comments: [
+      { id: 1, author: "Foodie123", text: "Delicious! Will make again." },
+      { id: 2, author: "PastaLover", text: "Perfect balance of flavors!" },
+    ],
+    createdAt: new Date(Date.now() - 3600000), // 1 hour ago
+  },
+  {
+    id: 2,
+    title: "Chicken Tikka Masala",
+    author: "Chef Priya",
+    image: "/placeholder.svg?height=300&width=400",
+    description:
+      "A flavorful Indian curry dish with tender chicken in a creamy tomato sauce.",
+    rating: 4.8,
+    votes: 200,
+    comments: [
+      { id: 1, author: "SpiceFan", text: "Authentic taste! Loved it." },
+      {
+        id: 2,
+        author: "CurryKing",
+        text: "Great recipe, but I added more chili.",
+      },
+    ],
+    createdAt: new Date(Date.now() - 86400000), // 1 day ago
+  },
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [recipes, setRecipes] = useState(mockRecipes);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+  const handleVote = (id: number, voteType: "up" | "down") => {
+    setRecipes((prevRecipes) =>
+      prevRecipes.map((recipe) =>
+        recipe.id === id
+          ? {
+              ...recipe,
+              votes: voteType === "up" ? recipe.votes + 1 : recipe.votes - 1,
+            }
+          : recipe
+      )
+    );
+  };
+
+  const handleRating = (id: number, rating: number) => {
+    setRecipes((prevRecipes) =>
+      prevRecipes.map((recipe) =>
+        recipe.id === id
+          ? { ...recipe, rating: (recipe.rating + rating) / 2 }
+          : recipe
+      )
+    );
+  };
+
+  const handleAddComment = (id: number, comment: string) => {
+    setRecipes((prevRecipes) =>
+      prevRecipes.map((recipe) =>
+        recipe.id === id
+          ? {
+              ...recipe,
+              comments: [
+                ...recipe.comments,
+                {
+                  id: recipe.comments.length + 1,
+                  author: "CurrentUser",
+                  text: comment,
+                },
+              ],
+            }
+          : recipe
+      )
+    );
+  };
+
+  return (
+    <main className="container mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-8 text-center">Crunch Social</h1>
+      <div className="space-y-8">
+        {recipes.map((recipe) => (
+          <RecipeCard
+            key={recipe.id}
+            recipe={recipe}
+            onVote={handleVote}
+            onRate={handleRating}
+            onAddComment={handleAddComment}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        ))}
+      </div>
+    </main>
   );
 }
