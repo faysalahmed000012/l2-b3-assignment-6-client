@@ -19,7 +19,7 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-10">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="/feed" className="text-2xl font-bold text-orange-600">
+          <Link href="/" className="text-2xl font-bold text-orange-600">
             Crunch Social
           </Link>
 

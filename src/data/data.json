@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Anika Rahman",
+    "image": "https://i.ibb.co.com/c1mfNCk/Adobe-Stock-536182562-Preview.jpg",
+    "shortDescription": "Anika is a passionate food lover and a skilled cook. She brings her creativity and enthusiasm to Crunch Social, sharing her delicious recipes and inspiring others to explore new culinary adventures.",
+    "role": "Founder and CEO"
+  },
+  {
+    "name": "Shakil Ahmed",
+    "image": "https://i.ibb.co.com/Fb3vFxJ/Adobe-Stock-651075792-Preview.jpg",
+    "shortDescription": "Shakil is a talented web developer with a knack for creating intuitive and user-friendly interfaces. He plays a crucial role in building and maintaining Crunch Social's online platform.",
+    "role": "Lead Developer"
+  },
+  {
+    "name": "Farhana Islam",
+    "image": "https://i.ibb.co.com/SmKwjK8/Adobe-Stock-317917475-Preview.jpg",
+    "shortDescription": "Farhana is a creative content writer with a passion for food and storytelling. She curates engaging articles, interviews, and recipe features for Crunch Social's community.",
+    "role": "Content Manager"
+  },
+  {
+    "name": "Rahim Chowdhury",
+    "image": "https://i.ibb.co.com/86KnQzC/Adobe-Stock-531323691-Preview.jpg",
+    "shortDescription": "Rahim is a skilled graphic designer who brings visual appeal to Crunch Social. He creates eye-catching graphics, logos, and layouts that enhance the user experience.",
+    "role": "Graphic Designer"
+  },
+  {
+    "name": "Mahmudul Hassan",
+    "image": "https://i.ibb.co.com/hgTby5J/Adobe-Stock-443769563-Preview.jpg",
+    "shortDescription": "Mahmudul is a dedicated community manager who fosters a welcoming and supportive environment for Crunch Social's members. She interacts with users, moderates discussions, and ensures a positive experience for all.",
+    "role": "Community Manager"
+  },
+  {
+    "name": "Arif Hossain",
+    "image": "https://i.ibb.co.com/yRnWcx9/Adobe-Stock-438830653-Preview.jpg",
+    "shortDescription": "Arif is a talented photographer who captures the beauty of food and creates stunning visuals for Crunch Social's recipes and articles.",
+    "role": "Photographer"
+  },
+  {
+    "name": "Mahmud Khan",
+    "image": "https://i.ibb.co.com/P9L1c1V/Adobe-Stock-403251913-Preview.jpg",
+    "shortDescription": "Mahmud is a passionate social media marketer who promotes Crunch Social's content and engages with the online community. She helps increase the website's visibility and reach.",
+    "role": "Social Media Manager"
+  },
+  {
+    "name": "Faruk Ahmed",
+    "image": "https://i.ibb.co.com/2sLZ204/Adobe-Stock-297245133-Preview.jpg",
+    "shortDescription": "Faruk is a skilled SEO expert who optimizes Crunch Social's website for search engines, improving its visibility and attracting organic traffic.",
+    "role": "SEO Specialist"
+  },
+  {
+    "name": "Tania Islam",
+    "image": "https://i.ibb.co.com/rHnKDFW/Adobe-Stock-302765753-Preview.jpg",
+    "shortDescription": "Tania is a talented UX/UI designer who focuses on creating intuitive and user-friendly interfaces for Crunch Social. She ensures that the website is easy to navigate and visually appealing.",
+    "role": "UX/UI Designer"
+  }
+]

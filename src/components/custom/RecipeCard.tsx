@@ -1,8 +1,8 @@
 "use client";
 import { Recipe } from "@/app/page";
+import frenchFry from "@/assets/images/french-fry.jpg";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import {
-  Clock,
   MessageSquare,
   Share2,
   Star,
@@ -10,8 +10,8 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { formatTimeDifference } from "../../../utils";
+import Link from "next/link";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import {
   Card,
@@ -21,6 +21,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Textarea } from "../ui/textarea";
+import TimeAgo from "./TimeAgo";
 
 export default function RecipeCard({
   recipe,
@@ -35,18 +36,6 @@ export default function RecipeCard({
 }) {
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
-  const [timeAgo, setTimeAgo] = useState("");
-
-  useEffect(() => {
-    const updateTimeAgo = () => {
-      setTimeAgo(formatTimeDifference(recipe.createdAt));
-    };
-
-    updateTimeAgo();
-    const timer = setInterval(updateTimeAgo, 60000); // Update every minute
-
-    return () => clearInterval(timer);
-  }, [recipe.createdAt]);
 
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,30 +44,32 @@ export default function RecipeCard({
       setComment("");
     }
   };
-
+  console.log(recipe.createdAt, "from parent");
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Avatar>
-              <AvatarImage src="/placeholder.svg" />
+              <AvatarImage
+                className="w-10 h-10 rounded-full"
+                src="https://avatars.githubusercontent.com/u/124599?v=4"
+              />
               <AvatarFallback>{recipe.author[0]}</AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle>{recipe.title}</CardTitle>
+              <Link href={`/recipe/5`}>
+                <CardTitle>{recipe.title}</CardTitle>
+              </Link>
               <p className="text-sm text-gray-500">by {recipe.author}</p>
             </div>
           </div>
-          <div className="flex items-center text-sm text-gray-500">
-            <Clock className="w-4 h-4 mr-1" />
-            <span>{timeAgo}</span>
-          </div>
+          <TimeAgo time={recipe.createdAt} />
         </div>
       </CardHeader>
       <CardContent>
         <Image
-          src={recipe.image}
+          src={frenchFry}
           alt={recipe.title}
           width={400}
           height={300}
