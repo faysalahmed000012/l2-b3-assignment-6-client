@@ -23,19 +23,20 @@ import {
 import { Textarea } from "../ui/textarea";
 import TimeAgo from "./TimeAgo";
 
-export default function RecipeCard({
-  recipe,
-  onVote,
-  onRate,
-  onAddComment,
-}: {
-  recipe: Recipe;
-  onVote: (id: number, voteType: "up" | "down") => void;
-  onRate: (id: number, rating: number) => void;
-  onAddComment: (id: number, comment: string) => void;
-}) {
+export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
+
+  const onVote = (id: number, voteType: "up" | "down") => {
+    console.log("vote");
+  };
+  const onRate = (id: number, rating: number) => {
+    console.log("rate");
+  };
+
+  const onAddComment = (id: number, comment: string) => {
+    console.log("comment");
+  };
 
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();

@@ -24,7 +24,7 @@ export interface Recipe {
   comments: Comment[];
   category: string; // Add this line
 }
-const mockRecipes: Recipe[] = [
+export const mockRecipes: Recipe[] = [
   {
     id: 1,
     title: "Spaghetti Carbonara",
@@ -164,13 +164,7 @@ export default function Home() {
         <SearchAndFilter onSearch={handleSearch} onFilter={handleFilter} />
         <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onVote={handleVote}
-              onRate={handleRating}
-              onAddComment={handleAddComment}
-            />
+            <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
       </main>

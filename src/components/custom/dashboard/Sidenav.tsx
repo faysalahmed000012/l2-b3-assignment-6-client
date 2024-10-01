@@ -1,73 +1,9 @@
-"use client";
+import dynamic from "next/dynamic";
 
-import { Nav } from "@/components/custom/dashboard/Nav";
-import { useState } from "react";
+const ClientSideNavbar = dynamic(() => import("./ClientSideNavbar"), {
+  ssr: false,
+});
 
-type Props = {};
-
-import {
-  ChevronRight,
-  LayoutDashboard,
-  Settings,
-  ShoppingCart,
-  UsersRound,
-} from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { useWindowWidth } from "@react-hook/window-size";
-
-export default function SideNavbar({}: Props) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const onlyWidth = useWindowWidth();
-  const mobileWidth = onlyWidth < 768;
-
-  function toggleSidebar() {
-    setIsCollapsed(!isCollapsed);
-  }
-
-  return (
-    <div className="relative min-w-[80px] border-r px-3  pb-10 pt-36 ">
-      {!mobileWidth && (
-        <div className="absolute right-[-20px] top-24">
-          <Button
-            onClick={toggleSidebar}
-            variant="secondary"
-            className=" rounded-full p-2"
-          >
-            <ChevronRight />
-          </Button>
-        </div>
-      )}
-      <Nav
-        isCollapsed={mobileWidth ? true : isCollapsed}
-        links={[
-          {
-            title: "Dashboard",
-            href: "/dashboard",
-            icon: LayoutDashboard,
-            variant: "default",
-          },
-          {
-            title: "Users",
-            href: "/dashboard/users",
-            icon: UsersRound,
-            variant: "ghost",
-          },
-          {
-            title: "Ordrs",
-            href: "/dashboard/orders",
-            icon: ShoppingCart,
-            variant: "ghost",
-          },
-          {
-            title: "Settings",
-            href: "/dashboard/settings",
-            icon: Settings,
-            variant: "ghost",
-          },
-        ]}
-      />
-    </div>
-  );
+export default function SideNavbar() {
+  return <ClientSideNavbar />;
 }
