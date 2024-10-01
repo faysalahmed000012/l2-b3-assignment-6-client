@@ -4,7 +4,7 @@ import Image from "next/image";
 const About = () => {
   console.log(team);
   return (
-    <div className="mt-[150px] min-h-[70vh]">
+    <div className="mx-[20px] mt-[150px] min-h-[70vh]">
       <div className="mx-auto md:max-w-[60%] lg:max-w-[50%]">
         <h1 className="text-center text-3xl md:text-5xl">Crunch Social</h1>
         <hr className="my-3 h-0.5 border-t-0 bg-neutral-200 dark:bg-white/10" />
@@ -37,12 +37,12 @@ const About = () => {
           Meet our team member who are working hard to make this project a
           success.
         </p>
-        <div className="mt-10 md:max-w-[1500px] mb-10 mx-auto grid grid-cols-3 gap-6">
+        <div className="mt-10 md:max-w-[1500px] mb-10 grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto">
           {team.map((member) => {
             return (
               <div
                 key={member.name}
-                className="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden"
+                className="mt-6 md:mt-0 max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden"
               >
                 {/* Image */}
                 <Image

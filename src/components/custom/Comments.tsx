@@ -26,9 +26,9 @@ const Comments = () => {
         <Button className="ms-16">POST</Button>
       </div>
       <div className="h-0.5 w-full bg-gray-500 rounded-full mb-3"></div>
-      <div className="">
+      <div>
         {arr1.map((item, index) => (
-          <div key={index} className="w-full mb-6">
+          <div key={index} className="w-full mb-7">
             <div>
               <div className="flex items-center justify-start gap-3">
                 <Avatar>
@@ -44,8 +44,8 @@ const Comments = () => {
                 <p className="text-sm text-gray-600">1 hour ago</p>
               </div>
             </div>
-            <div className="ms-14 w-full">
-              <div className="w-full h-6 text-gray-600 rounded-full">
+            <div className="ms-14">
+              <div className="text-gray-600 rounded-full">
                 {" "}
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. In,
                 odio!

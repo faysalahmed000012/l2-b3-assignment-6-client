@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Menu, PlusCircle, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { CreateAndEditPost } from "./CreateAndEditPost";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,7 +17,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-10">
+    <header className="fixed top-0 left-0 right-0 bg-white shadow z-10">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold text-orange-600">
@@ -24,7 +25,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -35,11 +36,14 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
-            <Button variant="ghost">
+          </div>
+          <div>
+            {/* <Button className="bg-orange-500 hover:bg-orange-600">
               <PlusCircle className="mr-2" size={18} />
               New Recipe
-            </Button>
-          </nav>
+            </Button> */}
+            <CreateAndEditPost />
+          </div>
 
           {/* Mobile Menu Button */}
           <Button

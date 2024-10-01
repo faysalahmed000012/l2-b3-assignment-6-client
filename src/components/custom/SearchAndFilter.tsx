@@ -24,7 +24,7 @@ export function SearchAndFilter({ onSearch, onFilter }: SearchAndFilterProps) {
 
   return (
     <div className="mb-8 bg-white rounded-lg shadow-md p-4 max-w-3xl mx-auto">
-      <div className="flex items-center space-x-2">
+      <div className="md:flex items-center space-x-2">
         <div className="relative flex-grow">
           <Input
             type="text"
@@ -38,25 +38,27 @@ export function SearchAndFilter({ onSearch, onFilter }: SearchAndFilterProps) {
             size={18}
           />
         </div>
-        <Button
-          onClick={handleSearch}
-          className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-4"
-        >
-          Search
-        </Button>
-        <Select onValueChange={onFilter}>
-          <SelectTrigger className="w-[140px] rounded-full">
-            <Filter className="mr-2" size={18} />
-            <SelectValue placeholder="Category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="main-course">Main Course</SelectItem>
-            <SelectItem value="dessert">Dessert</SelectItem>
-            <SelectItem value="appetizer">Appetizer</SelectItem>
-            <SelectItem value="vegetarian">Vegetarian</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="mt-3 md:mt-0 flex md:flex md:items-center md:justify-center flex-row-reverse md:gap-3 items-center justify-between ">
+          <Button
+            onClick={handleSearch}
+            className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-4"
+          >
+            Search
+          </Button>
+          <Select onValueChange={onFilter}>
+            <SelectTrigger className="w-[140px] rounded-full">
+              <Filter className="mr-2" size={18} />
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="main-course">Main Course</SelectItem>
+              <SelectItem value="dessert">Dessert</SelectItem>
+              <SelectItem value="appetizer">Appetizer</SelectItem>
+              <SelectItem value="vegetarian">Vegetarian</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );

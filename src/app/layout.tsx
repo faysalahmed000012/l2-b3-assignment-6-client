@@ -1,4 +1,4 @@
-import Footer from "@/components/custom/Footer";
+import { Footer } from "@/components/custom/Footer";
 import Header from "@/components/custom/Header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-b from-orange-50 to-white`}
       >
         <Header />
         {children}

@@ -1,5 +1,6 @@
 "use client";
 
+import { FeaturedCards } from "@/components/custom/FeaturedCards";
 import Header from "@/components/custom/Header";
 import RecipeCard from "@/components/custom/RecipeCard";
 import { SearchAndFilter } from "@/components/custom/SearchAndFilter";
@@ -155,13 +156,20 @@ export default function Home() {
     );
   };
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen ">
       <Header />
       <main className="container mx-auto p-4 pt-20">
-        <h1 className="text-4xl font-bold mb-8 text-center text-orange-600">
-          Recipe Feed
-        </h1>
+        <div className="mb-6">
+          <h1 className="text-center text-4xl font-bold mb-4 text-gray-800">
+            Discover Delicious Recipes
+          </h1>
+          <p className="text-center text-xl text-gray-600 max-w-2xl mx-auto">
+            Join our community of food lovers and share your culinary creations
+            with the world!
+          </p>
+        </div>
         <SearchAndFilter onSearch={handleSearch} onFilter={handleFilter} />
+        <FeaturedCards />
         <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredRecipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />

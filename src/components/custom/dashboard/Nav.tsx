@@ -44,12 +44,12 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         variant: link.href === pathName ? "default" : "ghost",
                         size: "icon",
                       }),
-                      "h-9 w-9",
+                      "h-6 w-6",
                       link.variant === "default" &&
                         "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                     )}
                   >
-                    <link.icon className="h-6 w-6" />
+                    <link.icon className="h-4 w-4" />
                     <span className="sr-only">{link.title}</span>
                   </Link>
                 </TooltipTrigger>

@@ -1,11 +1,12 @@
-import SideNavbar from "@/components/custom/dashboard/Sidenav";
+import { DashboardSidenav } from "@/components/custom/dashboard/DashboardSideNav";
 import { ReactNode } from "react";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className=" min-h-screen w-full bg-white text-black flex ">
-      <SideNavbar />
+      {/* <SideNavbar /> */}
+      <DashboardSidenav />
       <div className="p-8 w-full">
         <div className="ms-10 mt-[70px]">
           <h1 className="text-3xl md:text-5xl">Hello, Faysal</h1>

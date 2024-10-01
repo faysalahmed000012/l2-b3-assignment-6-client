@@ -23,6 +23,23 @@ import {
 import { Textarea } from "../ui/textarea";
 import TimeAgo from "./TimeAgo";
 
+const StarRating = ({ rating }: { rating: number }) => {
+  return (
+    <div className="flex">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <Star
+          key={star}
+          className={`h-5 w-5 ${
+            star <= Math.round(rating)
+              ? "text-yellow-400 fill-current"
+              : "text-gray-300"
+          }`}
+        />
+      ))}
+    </div>
+  );
+};
+
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
@@ -62,7 +79,9 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
               <Link href={`/recipe/5`}>
                 <CardTitle>{recipe.title}</CardTitle>
               </Link>
-              <p className="text-sm text-gray-500">by {recipe.author}</p>
+              <Link href={`/profile/user`}>
+                <p className="text-sm text-gray-500">by {recipe.author}</p>
+              </Link>
             </div>
           </div>
           <TimeAgo time={recipe.createdAt} />
@@ -96,23 +115,10 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
             </Button>
           </div>
           <div className="flex items-center space-x-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Button
-                key={star}
-                variant="ghost"
-                size="sm"
-                onClick={() => onRate(recipe.id, star)}
-              >
-                <Star
-                  className={`h-4 w-4 ${
-                    star <= recipe.rating
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-gray-300"
-                  }`}
-                />
-              </Button>
-            ))}
-            <span className="text-sm ml-2">{recipe.rating.toFixed(1)}</span>
+            <StarRating rating={Number(recipe.rating.toFixed(1))} />
+            <span className="text-sm text-muted-foreground">
+              {recipe.rating.toFixed(1)}
+            </span>
           </div>
         </div>
       </CardContent>

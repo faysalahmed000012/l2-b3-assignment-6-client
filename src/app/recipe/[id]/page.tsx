@@ -22,12 +22,14 @@ const RecipeDetail = ({ params }: { params: { id: string } }) => {
         <div className="pt-[24px] md:pt-[50px] flex-1">
           <div>
             <h1 className="text-3xl md:text-4xl">Magical French Fry</h1>
-            <div className="mt-2 flex item-center justify-start gap-6">
+            <div className="mt-2 md:flex item-center justify-start gap-6">
               <p className="text-sm text-gray-500">by Scarlet Which</p>
-              <TimeAgo time={new Date(Date.now() - 86400000)} />
-              <div className=" flex items-center text-sm text-gray-500">
-                <Clock className="w-4 h-4 mr-1" />
-                <span>1hour(s) to make</span>
+              <div className="mt-3 md:mt-0 flex items-start justify-between gap-6">
+                <TimeAgo time={new Date(Date.now() - 86400000)} />
+                <div className=" flex items-center text-sm text-gray-500">
+                  <Clock className="w-4 h-4 mr-1" />
+                  <span>1hour(s) to make</span>
+                </div>
               </div>
             </div>
           </div>
