@@ -8,7 +8,7 @@ import FrenchFry from "../../../assets/images/french-fry.jpg";
 const RecipeDetail = ({ params }: { params: { id: string } }) => {
   console.log(params.id);
   return (
-    <div className="px-[80px] mt-[140px]">
+    <div className="px-[20px] md:px-[80px] mt-[140px]">
       <div className="md:flex justify-center ">
         <div className="flex-1 flex items-center justify-center">
           <Image
@@ -19,10 +19,10 @@ const RecipeDetail = ({ params }: { params: { id: string } }) => {
             alt="french fry"
           />
         </div>
-        <div className="pt-[50px] flex-1">
+        <div className="pt-[24px] md:pt-[50px] flex-1">
           <div>
             <h1 className="text-3xl md:text-4xl">Magical French Fry</h1>
-            <div className=" flex item-center justify-start gap-6">
+            <div className="mt-2 flex item-center justify-start gap-6">
               <p className="text-sm text-gray-500">by Scarlet Which</p>
               <TimeAgo time={new Date(Date.now() - 86400000)} />
               <div className=" flex items-center text-sm text-gray-500">
@@ -32,7 +32,7 @@ const RecipeDetail = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
 
-          <div className="mt-2 flex-col justify-between items-center">
+          <div className="mt-6 flex-col justify-between items-center">
             <div className="flex items-center space-x-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Button
