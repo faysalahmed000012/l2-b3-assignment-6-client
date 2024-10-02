@@ -15,7 +15,6 @@ import Link from "next/link";
 import TimeAgo from "../../TimeAgo";
 
 export default function PendingPostCard({ recipe }: { recipe: Recipe }) {
-  console.log(recipe.createdAt, "from parent");
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>

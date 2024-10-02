@@ -62,7 +62,6 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       setComment("");
     }
   };
-  console.log(recipe.createdAt, "from parent");
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>

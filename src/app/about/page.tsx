@@ -2,7 +2,6 @@ import team from "@/data/data.json";
 import Image from "next/image";
 
 const About = () => {
-  console.log(team);
   return (
     <div className="mx-[20px] mt-[150px] min-h-[70vh]">
       <div className="mx-auto md:max-w-[60%] lg:max-w-[50%]">
