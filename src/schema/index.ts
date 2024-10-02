@@ -10,9 +10,6 @@ export const RegisterSchema = z.object({
   password: z.string().min(1, {
     message: "Password is missing",
   }),
-  confirmPassword: z.string().min(1, {
-    message: "Password is missing",
-  }),
 });
 
 export const LoginSchema = z.object({

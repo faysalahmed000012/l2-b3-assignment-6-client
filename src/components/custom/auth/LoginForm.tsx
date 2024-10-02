@@ -15,6 +15,7 @@ import { IUser, setUser } from "@/redux/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { LoginSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ import CardWrapper from "./card-wrapper";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [login] = useLoginMutation();
 
@@ -42,8 +44,9 @@ const LoginForm = () => {
       const user = verifyToken(res.data.token) as unknown as IUser;
       dispatch(setUser({ user: user, token: res.data.token }));
       setLoading(false);
+      router.push("/");
     } catch (error: any) {
-      console.log(error);
+      console.log(error.message);
       setLoading(false);
     }
   };

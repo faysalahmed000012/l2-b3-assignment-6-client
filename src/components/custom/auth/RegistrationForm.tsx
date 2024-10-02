@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useSignUpMutation } from "@/redux/auth/authApi";
 import { RegisterSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -20,19 +21,26 @@ import CardWrapper from "./card-wrapper";
 
 const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
+  const [signUp] = useSignUpMutation();
   const form = useForm({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      email: "",
       name: "",
+      email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
     setLoading(true);
-    console.log(data);
+    try {
+      const res = await signUp(data);
+      console.log(res);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   const { pending } = useFormStatus();
@@ -82,19 +90,6 @@ const RegisterForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" placeholder="******" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <Input {...field} type="password" placeholder="******" />
                   </FormControl>
