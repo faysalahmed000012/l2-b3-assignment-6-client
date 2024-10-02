@@ -10,18 +10,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useSignUpMutation } from "@/redux/auth/authApi";
+import { useUserRegistration } from "@/hooks/auth.hooks";
 import { RegisterSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import CardWrapper from "./card-wrapper";
 
 const RegisterForm = () => {
-  const [loading, setLoading] = useState(false);
-  const [signUp] = useSignUpMutation();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const redirect = searchParams.get("redirect");
+
   const form = useForm({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -31,19 +34,32 @@ const RegisterForm = () => {
     },
   });
 
+  const {
+    mutate: handleUserRegistration,
+    isPending,
+    isSuccess,
+  } = useUserRegistration();
+
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
-    setLoading(true);
-    try {
-      const res = await signUp(data);
-      console.log(res);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
+    // const userData = {
+    //   ...data,
+    //   profilePhoto:
+    //     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+    // };
+
+    handleUserRegistration(data);
   };
 
-  const { pending } = useFormStatus();
+  useEffect(() => {
+    if (!isPending && isSuccess) {
+      if (redirect) {
+        router.push(redirect);
+      } else {
+        router.push("/");
+      }
+    }
+  }, [isPending, isSuccess, redirect, router]);
+
   return (
     <CardWrapper
       label="Create an account"
@@ -98,8 +114,8 @@ const RegisterForm = () => {
               )}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={pending}>
-            {loading ? "Loading..." : "Register"}
+          <Button type="submit" className="w-full">
+            Register
           </Button>
         </form>
       </Form>

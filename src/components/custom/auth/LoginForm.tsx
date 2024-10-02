@@ -10,25 +10,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useLoginMutation } from "@/redux/auth/authApi";
-import { IUser, setUser } from "@/redux/auth/authSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { useUser } from "@/context/userProvider";
+import { useUserLogin } from "@/hooks/auth.hooks";
 import { LoginSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { verifyToken } from "../../../../utils";
 import CardWrapper from "./card-wrapper";
 
 const LoginForm = () => {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const [login] = useLoginMutation();
+  const { setIsLoading: userLoading } = useUser();
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const redirect = searchParams.get("redirect");
   const form = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -37,21 +35,22 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
-    setLoading(true);
-    try {
-      const res = await login(data);
-      const user = verifyToken(res.data.token) as unknown as IUser;
-      dispatch(setUser({ user: user, token: res.data.token }));
-      setLoading(false);
-      router.push("/");
-    } catch (error: any) {
-      console.log(error.message);
-      setLoading(false);
-    }
-  };
+  const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
 
-  const { pending } = useFormStatus();
+  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+    handleUserLogin(data);
+    userLoading(true);
+  };
+  useEffect(() => {
+    if (!isPending && isSuccess) {
+      if (redirect) {
+        router.push(redirect);
+      } else {
+        router.push("/");
+      }
+    }
+  }, [isPending, isSuccess, redirect, router]);
+
   return (
     <CardWrapper
       label="Login to your account"
@@ -93,8 +92,8 @@ const LoginForm = () => {
               )}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={pending}>
-            {loading ? "Loading..." : "Login"}
+          <Button type="submit" className="w-full">
+            login
           </Button>
         </form>
       </Form>
