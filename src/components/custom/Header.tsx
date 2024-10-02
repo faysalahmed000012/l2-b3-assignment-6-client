@@ -14,6 +14,7 @@ export default function Header() {
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Login", href: "/auth/login" },
   ];
 
   return (
@@ -38,10 +39,6 @@ export default function Header() {
             ))}
           </div>
           <div>
-            {/* <Button className="bg-orange-500 hover:bg-orange-600">
-              <PlusCircle className="mr-2" size={18} />
-              New Recipe
-            </Button> */}
             <CreateAndEditPost />
           </div>
 

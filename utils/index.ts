@@ -1,3 +1,5 @@
+import { jwtDecode } from "jwt-decode";
+
 export function formatTimeDifference(date: Date) {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -12,4 +14,8 @@ export function formatTimeDifference(date: Date) {
   if (diffInSeconds < 31536000)
     return `${Math.floor(diffInSeconds / 2592000)} months ago`;
   return `${Math.floor(diffInSeconds / 31536000)} years ago`;
+}
+
+export function verifyToken(token: string) {
+  return jwtDecode(token);
 }

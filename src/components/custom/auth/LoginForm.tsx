@@ -10,16 +10,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useLoginMutation } from "@/redux/auth/authApi";
+import { IUser, setUser } from "@/redux/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { LoginSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { verifyToken } from "../../../../utils";
 import CardWrapper from "./card-wrapper";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const [login] = useLoginMutation();
 
   const form = useForm({
     resolver: zodResolver(LoginSchema),
@@ -29,9 +35,17 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     setLoading(true);
-    console.log(data);
+    try {
+      const res = await login(data);
+      const user = verifyToken(res.data.token) as unknown as IUser;
+      dispatch(setUser({ user: user, token: res.data.token }));
+      setLoading(false);
+    } catch (error: any) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   const { pending } = useFormStatus();
