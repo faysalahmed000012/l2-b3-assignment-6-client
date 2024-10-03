@@ -1,5 +1,6 @@
 "use server";
 
+import { IUserDetails } from "@/components/custom/dashboard/EditProfile";
 import axiosInstance from "@/config/axiosInstance";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
@@ -81,8 +82,23 @@ export const getNewAccessToken = async () => {
 export const getUserDetail = async (email: string) => {
   try {
     const res = await axiosInstance({ url: `/user/${email}`, method: "GET" });
-    return res?.data?.data;
+    const user: Partial<IUserDetails> = res?.data?.data;
+    return user;
   } catch (error) {
     throw new Error("Failed to get User Details, try again!");
+  }
+};
+
+export const updateUser = async (data: FormData) => {
+  console.log(data);
+  try {
+    const res = await axiosInstance.put(`/user/update`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(res?.data);
+  } catch (error) {
+    console.log(error);
   }
 };

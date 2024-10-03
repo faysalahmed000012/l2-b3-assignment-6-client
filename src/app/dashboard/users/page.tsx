@@ -1,5 +1,4 @@
 "use client";
-
 import { DataTable } from "@/components/custom/dashboard/user/UsersTable";
 
 import Image from "next/image";
@@ -12,7 +11,7 @@ const columns = [
       return (
         <div className="flex gap-2 items-center">
           <Image
-            className="h-10 w-10"
+            className="h-10 w-10 rounded-full"
             width={40}
             height={40}
             src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${row.getValue(

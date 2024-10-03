@@ -5,17 +5,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/context/userProvider";
+import { useUserUpdate } from "@/hooks/auth.hooks";
 import { getUserDetail } from "@/services/AuthServices";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FaRegEdit } from "react-icons/fa";
 
 interface ProfileFormData {
   name: string;
   email: string;
   bio: string;
-  image: FileList;
+  image: File;
 }
 
 export interface IUserDetails {
@@ -29,6 +30,7 @@ export interface IUserDetails {
   comments?: [];
   ratedPosts?: [];
   followers?: [];
+  profilePicture: string;
   isPremium: boolean;
   premiumExpires: null | number;
   updatedAt: string;
@@ -38,11 +40,10 @@ const EditProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUserDetails | null>(null);
   const { user } = useUser();
-  const [previewImage, setPreviewImage] = useState(
-    "https://github.com/shadcn.png"
-  );
+  const [previewImage, setPreviewImage] = useState("");
+  const { mutate: handleUserUpdate, isPending, isSuccess } = useUserUpdate();
 
-  const { register, handleSubmit, watch, reset } = useForm<ProfileFormData>({
+  const { register, handleSubmit, watch, reset } = useForm({
     defaultValues: {
       name: currentUser?.name || "",
       email: currentUser?.email || "",
@@ -57,12 +58,13 @@ const EditProfile = () => {
         const response = await getUserDetail(user?.email as string);
 
         if (!ignore) {
-          setCurrentUser(response);
+          setCurrentUser(response as IUserDetails | null);
           reset({
             name: response.name,
             email: response.email,
             bio: response.bio,
           });
+          setPreviewImage(response?.profilePicture as string);
         }
       } catch (error) {
         console.log(error);
@@ -76,9 +78,16 @@ const EditProfile = () => {
 
   const watchImage = watch("image");
 
-  const onSubmit: SubmitHandler<ProfileFormData> = (data) => {
-    console.log(data);
-    // Here you would typically send the data to your backend
+  const onSubmit = (data) => {
+    const formData = new FormData();
+    const userData = {
+      name: data.name,
+      email: data.email,
+      bio: data.bio,
+    };
+    formData.append("data", JSON.stringify(userData));
+    formData.append("image", data.image[0]);
+    handleUserUpdate(formData);
     setIsEditing(false);
   };
 
@@ -115,7 +124,7 @@ const EditProfile = () => {
                 width={160}
                 height={160}
                 alt="Profile"
-                className="rounded-full mx-auto sm:mx-0"
+                className="rounded-full mx-auto sm:mx-0 object-cover w-[160px] h-[160px]"
               />
               {isEditing && (
                 <div className="mt-4">
