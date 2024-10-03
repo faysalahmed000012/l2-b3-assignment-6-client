@@ -89,15 +89,50 @@ export const getUserDetail = async (email: string) => {
   }
 };
 
+export const getAllUsers = async () => {
+  try {
+    const res = await axiosInstance.get("/user", { withCredentials: true });
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const updateUser = async (data: FormData) => {
-  console.log(data);
   try {
     const res = await axiosInstance.put(`/user/update`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(res?.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const blockUser = async (email: string) => {
+  try {
+    const res = await axiosInstance.put(
+      "/user/block",
+      { email },
+      {
+        withCredentials: true,
+      }
+    );
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const makeAdmin = async (email: string) => {
+  try {
+    const res = await axiosInstance.put(
+      "/user/makeAdmin",
+      { email },
+      { withCredentials: true }
+    );
+    return res?.data?.data;
   } catch (error) {
     console.log(error);
   }
