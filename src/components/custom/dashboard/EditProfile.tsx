@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useUser } from "@/context/userProvider";
+import { getUserDetail } from "@/services/AuthServices";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaRegEdit } from "react-icons/fa";
 
@@ -16,19 +18,61 @@ interface ProfileFormData {
   image: FileList;
 }
 
+export interface IUserDetails {
+  _id: string;
+  name: string;
+  email: string;
+  bio?: string;
+  role: string;
+  posts?: [];
+  likes?: [];
+  comments?: [];
+  ratedPosts?: [];
+  followers?: [];
+  isPremium: boolean;
+  premiumExpires: null | number;
+  updatedAt: string;
+}
+
 const EditProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [currentUser, setCurrentUser] = useState<IUserDetails | null>(null);
+  const { user } = useUser();
   const [previewImage, setPreviewImage] = useState(
     "https://github.com/shadcn.png"
   );
 
-  const { register, handleSubmit, watch } = useForm<ProfileFormData>({
+  const { register, handleSubmit, watch, reset } = useForm<ProfileFormData>({
     defaultValues: {
-      name: "Faysal Ahmed",
-      email: "faysal.ahmed@gmail.com",
-      bio: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur dicta necessitatibus consequuntur excepturi in pariatur illum provident autem laboriosam culpa.",
+      name: currentUser?.name || "",
+      email: currentUser?.email || "",
+      bio: currentUser?.bio || "",
     },
   });
+
+  useEffect(() => {
+    let ignore = false;
+    const fetchUser = async () => {
+      try {
+        const response = await getUserDetail(user?.email as string);
+
+        if (!ignore) {
+          setCurrentUser(response);
+          reset({
+            name: response.name,
+            email: response.email,
+            bio: response.bio,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+    return () => {
+      ignore = true;
+    };
+  }, [user, reset]);
 
   const watchImage = watch("image");
 

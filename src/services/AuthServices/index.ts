@@ -77,3 +77,12 @@ export const getNewAccessToken = async () => {
     throw new Error("Failed to get new access token");
   }
 };
+
+export const getUserDetail = async (email: string) => {
+  try {
+    const res = await axiosInstance({ url: `/user/${email}`, method: "GET" });
+    return res?.data?.data;
+  } catch (error) {
+    throw new Error("Failed to get User Details, try again!");
+  }
+};
