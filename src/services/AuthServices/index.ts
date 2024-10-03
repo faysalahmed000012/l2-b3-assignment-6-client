@@ -105,6 +105,7 @@ export const updateUser = async (data: FormData) => {
         "Content-Type": "multipart/form-data",
       },
     });
+    return res?.data?.data;
   } catch (error) {
     console.log(error);
   }
@@ -130,6 +131,19 @@ export const makeAdmin = async (email: string) => {
     const res = await axiosInstance.put(
       "/user/makeAdmin",
       { email },
+      { withCredentials: true }
+    );
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleFollow = async (follower: string, following: string) => {
+  try {
+    const res = await axiosInstance.put(
+      "/user/follow",
+      { following, follower },
       { withCredentials: true }
     );
     return res?.data?.data;

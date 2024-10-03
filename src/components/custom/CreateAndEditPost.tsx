@@ -18,14 +18,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/context/userProvider";
+import { useCreatePost } from "@/hooks/post.hooks";
+import { getUserDetail } from "@/services/AuthServices";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/css/froala_style.min.css";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
+import { IUserDetails } from "./dashboard/EditProfile";
 import Tiptap from "./Tiptap";
 
 interface IFormData {
@@ -37,6 +41,28 @@ export function CreateAndEditPost() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState(false);
+  const { mutate: CreatePost } = useCreatePost();
+  const { user } = useUser();
+  const [currentUser, setCurrentUser] = useState<IUserDetails | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+    const fetchUser = async () => {
+      try {
+        const response = await getUserDetail(user?.email as string);
+
+        if (!ignore) {
+          setCurrentUser(response as IUserDetails | null);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const form = useForm({
     defaultValues: {
@@ -47,10 +73,22 @@ export function CreateAndEditPost() {
   });
   const onSubmit: SubmitHandler<IFormData> = (values: any) => {
     const formData = new FormData();
+    if (!values.title || !values.description || !imageFile) {
+      alert("Please fill in all fields");
+      return;
+    } else {
+      const postValues = {
+        title: values.title,
+        description: values.description,
+        user: currentUser?._id,
+        isPremium: isPremium,
+      };
 
-    formData.append("data", JSON.stringify(values));
-    formData.append("image", imageFile as unknown as string);
-    console.log(formData.get("data"));
+      formData.append("data", JSON.stringify(postValues));
+      formData.append("image", imageFile as unknown as string);
+      console.log(values);
+      CreatePost(formData);
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +143,9 @@ export function CreateAndEditPost() {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Tiptap onChange={field.onChange} />
+                      <div onClick={(e) => e.preventDefault()}>
+                        <Tiptap onChange={field.onChange} />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

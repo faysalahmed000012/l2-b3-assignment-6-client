@@ -1,9 +1,13 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useUser } from "@/context/userProvider";
+import { handleFollow } from "@/services/AuthServices";
 import { MapPin } from "lucide-react";
 
 export function UserInfo({ user }: { user: any }) {
+  const { user: currentUser } = useUser();
   return (
     <Card className="mb-6">
       <CardContent className="pt-6">
@@ -20,9 +24,7 @@ export function UserInfo({ user }: { user: any }) {
           </p>
           <div className="flex justify-center space-x-4 mb-4">
             <div className="text-center">
-              <p className="font-bold">
-                {user?.followers?.toLocaleString() || 0}
-              </p>
+              <p className="font-bold">{user?.followers?.length || 0}</p>
 
               <p className="text-sm text-gray-500">Followers</p>
             </div>
@@ -33,7 +35,14 @@ export function UserInfo({ user }: { user: any }) {
               <p className="text-sm text-gray-500">Following</p>
             </div>
           </div>
-          <Button className="w-full max-w-xs">Follow</Button>
+          <Button
+            onClick={async () =>
+              await handleFollow(currentUser?.email as string, user._id)
+            }
+            className="w-full max-w-xs"
+          >
+            Follow
+          </Button>
         </div>
       </CardContent>
     </Card>

@@ -20,7 +20,7 @@ export default function Header() {
     user
       ? { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard }
       : { name: "Login", href: "/auth/login" },
-    user && { name: "Profile", href: `/profile/${user.email}` },
+    // user && !isLoading && { name: "Profile", href: `/profile/${user?.email}` },
   ];
 
   const handleLogout = () => {

@@ -7,7 +7,7 @@ const Tiptap = ({ onChange }: { onChange: (richText: string) => void }) => {
     extensions: [StarterKit.configure()],
     editorProps: {
       attributes: {
-        class: "rounded-md border min-h-[150px] border-input ",
+        class: "rounded-md border min-h-[150px] border-input p-3",
       },
     },
     onUpdate({ editor }) {
