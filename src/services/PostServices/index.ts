@@ -57,3 +57,36 @@ export const updatePost = async (data: any) => {
     console.log(error);
   }
 };
+
+export const postAction = async (data: any) => {
+  try {
+    const res = await axiosInstance.put("/posts/action", data, {
+      withCredentials: true,
+    });
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addComment = async (
+  postId: string,
+  userId: string,
+  content: string
+) => {
+  const body = {
+    postId: postId,
+    comment: {
+      user: userId,
+      content: content,
+    },
+  };
+  try {
+    const res = await axiosInstance.put("/posts/action/comment", body, {
+      withCredentials: true,
+    });
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

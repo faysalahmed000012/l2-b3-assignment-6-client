@@ -29,7 +29,6 @@ import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
-import { IUserDetails } from "./dashboard/EditProfile";
 import Tiptap from "./Tiptap";
 
 interface IFormData {
@@ -43,16 +42,16 @@ export function CreateAndEditPost() {
   const [isPremium, setIsPremium] = useState(false);
   const { mutate: CreatePost } = useCreatePost();
   const { user } = useUser();
-  const [currentUser, setCurrentUser] = useState<IUserDetails | null>(null);
+  // const [currentUser, setCurrentUser] = useState<IUserDetails | null>(null);
+  const [detailedUser, setDetailedUser] = useState({});
 
   useEffect(() => {
     let ignore = false;
     const fetchUser = async () => {
       try {
         const response = await getUserDetail(user?.email as string);
-
         if (!ignore) {
-          setCurrentUser(response as IUserDetails | null);
+          setDetailedUser(response);
         }
       } catch (error) {
         console.log(error);
@@ -62,7 +61,7 @@ export function CreateAndEditPost() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [user]);
 
   const form = useForm({
     defaultValues: {
@@ -80,10 +79,9 @@ export function CreateAndEditPost() {
       const postValues = {
         title: values.title,
         description: values.description,
-        user: currentUser?._id,
+        user: detailedUser?._id,
         isPremium: isPremium,
       };
-
       formData.append("data", JSON.stringify(postValues));
       formData.append("image", imageFile as unknown as string);
       console.log(values);

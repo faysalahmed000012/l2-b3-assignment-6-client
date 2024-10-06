@@ -8,19 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Filter, Search } from "lucide-react";
-import { useState } from "react";
 
-interface SearchAndFilterProps {
-  onSearch: (query: string) => void;
-  onFilter: (category: string) => void;
-}
-
-export function SearchAndFilter({ onSearch, onFilter }: SearchAndFilterProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = () => {
-    onSearch(searchQuery);
-  };
+export function SearchAndFilter() {
+  // const handleSearch = () => {
+  //   onSearch(searchQuery);
+  // };
 
   return (
     <div className="mb-8 bg-white rounded-lg shadow-md p-4 max-w-3xl mx-auto">
@@ -29,8 +21,8 @@ export function SearchAndFilter({ onSearch, onFilter }: SearchAndFilterProps) {
           <Input
             type="text"
             placeholder="Search recipes..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            // value={searchQuery}
+            // onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 pr-4 py-2 rounded-full"
           />
           <Search
@@ -39,13 +31,10 @@ export function SearchAndFilter({ onSearch, onFilter }: SearchAndFilterProps) {
           />
         </div>
         <div className="mt-3 md:mt-0 flex md:flex md:items-center md:justify-center flex-row-reverse md:gap-3 items-center justify-between ">
-          <Button
-            onClick={handleSearch}
-            className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-4"
-          >
+          <Button className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-4">
             Search
           </Button>
-          <Select onValueChange={onFilter}>
+          <Select>
             <SelectTrigger className="w-[140px] rounded-full">
               <Filter className="mr-2" size={18} />
               <SelectValue placeholder="Category" />

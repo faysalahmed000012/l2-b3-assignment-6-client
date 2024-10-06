@@ -48,7 +48,7 @@ const UsersTable = (userData: any) => {
                   {user.role == "admin" ? "Admin" : "Make Admin"}
                 </Button>
                 <Button
-                  disabled={user?.isBlocked}
+                  disabled={user?.isBlocked || user.role == "admin"}
                   onClick={async () => await blockUser(user.email)}
                 >
                   {user.isBlocked ? "Blocked" : "Block"}
