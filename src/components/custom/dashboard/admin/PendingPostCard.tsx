@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { approvePost, postAction } from "@/services/PostServices";
+import { approvePost, deletePost, postAction } from "@/services/PostServices";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Image from "next/image";
 import Link from "next/link";
@@ -66,6 +66,12 @@ export default function PendingPostCard({ post }: { post: any }) {
           className="bg-green-500"
         >
           Approve
+        </Button>
+        <Button
+          onClick={async () => await deletePost(post._id)}
+          className="bg-red-500"
+        >
+          Delete
         </Button>
         <Button onClick={() => onAdminAction("reject")} className="bg-red-500">
           Reject

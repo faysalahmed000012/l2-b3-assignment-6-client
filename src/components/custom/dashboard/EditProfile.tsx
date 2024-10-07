@@ -30,7 +30,8 @@ export interface IUserDetails {
   comments?: [];
   ratedPosts?: [];
   followers?: [];
-  profilePicture: string;
+  profilePicture?: string;
+  location?: string;
   isPremium: boolean;
   premiumExpires: null | number;
   updatedAt: string;
@@ -48,6 +49,7 @@ const EditProfile = () => {
       name: currentUser?.name || "",
       email: currentUser?.email || "",
       bio: currentUser?.bio || "",
+      location: currentUser?.location || "",
     },
   });
 
@@ -63,6 +65,7 @@ const EditProfile = () => {
             name: response.name,
             email: response.email,
             bio: response.bio,
+            location: response.location,
           });
           setPreviewImage(response?.profilePicture as string);
         }
@@ -84,6 +87,7 @@ const EditProfile = () => {
       name: data.name,
       email: data.email,
       bio: data.bio,
+      location: data.location,
     };
     formData.append("data", JSON.stringify(userData));
     formData.append("image", data.image[0]);
@@ -182,6 +186,23 @@ const EditProfile = () => {
                 />
               ) : (
                 <p className="text-base sm:text-lg">{watch("bio")}</p>
+              )}
+            </div>
+          </div>
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center">
+            <div className="w-full sm:w-1/2 mb-6 sm:mb-0">
+              <Label htmlFor="location" className="text-gray-600 block mb-2">
+                Location:
+              </Label>
+              {isEditing ? (
+                <Input
+                  id="location"
+                  type="text"
+                  {...register("location")}
+                  className="text-lg sm:text-xl"
+                />
+              ) : (
+                <p className="text-lg sm:text-xl">{watch("location")}</p>
               )}
             </div>
           </div>

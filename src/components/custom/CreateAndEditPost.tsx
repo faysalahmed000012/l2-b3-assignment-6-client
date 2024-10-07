@@ -26,7 +26,7 @@ import "froala-editor/css/froala_style.min.css";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
 import Tiptap from "./Tiptap";
@@ -34,6 +34,8 @@ import Tiptap from "./Tiptap";
 interface IFormData {
   title: string;
   description: string;
+  ingredients: { name: string; quantity: string }[];
+  cookingTime: number;
 }
 
 export function CreateAndEditPost() {
@@ -42,8 +44,8 @@ export function CreateAndEditPost() {
   const [isPremium, setIsPremium] = useState(false);
   const { mutate: CreatePost } = useCreatePost();
   const { user } = useUser();
-  // const [currentUser, setCurrentUser] = useState<IUserDetails | null>(null);
   const [detailedUser, setDetailedUser] = useState({});
+  const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     let ignore = false;
@@ -63,30 +65,72 @@ export function CreateAndEditPost() {
     };
   }, [user]);
 
-  const form = useForm({
+  const form = useForm<IFormData>({
     defaultValues: {
       title: "",
       description: "",
+      ingredients: [],
+      cookingTime: 0,
     },
     mode: "onChange",
   });
-  const onSubmit: SubmitHandler<IFormData> = (values: any) => {
-    const formData = new FormData();
-    if (!values.title || !values.description || !imageFile) {
+
+  const { control, handleSubmit, register } = form;
+
+  const {
+    fields: ingredientFields,
+    append: appendIngredient,
+    remove: removeIngredient,
+  } = useFieldArray({
+    control,
+    name: "ingredients",
+  });
+
+  const handleTagClick = (tag: string) => {
+    setTags((prev) =>
+      prev.includes(tag)
+        ? prev.filter((t) => t !== tag)
+        : [...prev, tag].slice(0, 5)
+    );
+  };
+
+  const availableTags = [
+    "breakfast",
+    "lunch",
+    "dinner",
+    "dessert",
+    "snack",
+    "vegan",
+    "vegetarian",
+    "gluten-free",
+    "low-carb",
+  ];
+
+  const onSubmit: SubmitHandler<IFormData> = (values) => {
+    if (
+      !values.title ||
+      !values.description ||
+      !imageFile ||
+      !values.ingredients ||
+      !values.cookingTime
+    ) {
       alert("Please fill in all fields");
       return;
-    } else {
-      const postValues = {
-        title: values.title,
-        description: values.description,
-        user: detailedUser?._id,
-        isPremium: isPremium,
-      };
-      formData.append("data", JSON.stringify(postValues));
-      formData.append("image", imageFile as unknown as string);
-      console.log(values);
-      CreatePost(formData);
     }
+
+    const formData = new FormData();
+    const postValues = {
+      title: values.title,
+      description: values.description,
+      user: (detailedUser as any)?._id,
+      isPremium: isPremium,
+      ingredients: values.ingredients,
+      cookingTime: values.cookingTime,
+      tags: tags,
+    };
+    formData.append("data", JSON.stringify(postValues));
+    formData.append("image", imageFile);
+    CreatePost(formData);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +153,8 @@ export function CreateAndEditPost() {
           New Recipe
         </Button>
       </DialogTrigger>
-      <DialogContent className="md:max-w-[700px]">
+
+      <DialogContent className="max-h-screen overflow-y-scroll md:max-w-[700px]">
         <DialogHeader>
           <DialogTitle>
             <h1 className="text-orange-500 text-xl">Create Post</h1>
@@ -120,9 +165,9 @@ export function CreateAndEditPost() {
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               <FormField
-                control={form.control}
+                control={control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
@@ -135,7 +180,84 @@ export function CreateAndEditPost() {
                 )}
               />
               <FormField
-                control={form.control}
+                control={control}
+                name="ingredients"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Ingredients</FormLabel>
+                    <FormControl>
+                      <div>
+                        {ingredientFields.map((field, index) => (
+                          <div key={field.id} className="flex space-x-2 mt-1">
+                            <Input
+                              {...register(`ingredients.${index}.name`, {
+                                required: "Ingredient name is required",
+                              })}
+                              placeholder="Ingredient name"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            />
+                            <Input
+                              {...register(`ingredients.${index}.quantity`, {
+                                required: "Quantity is required",
+                              })}
+                              placeholder="Quantity"
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              onClick={() => removeIngredient(index)}
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        ))}
+                        <Button
+                          type="button"
+                          className="mt-2"
+                          onClick={() =>
+                            appendIngredient({ name: "", quantity: "" })
+                          }
+                        >
+                          Add Ingredient
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="cookingTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cooking Time (minutes)</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="ex. 10" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div>
+                {availableTags.map((tag) => (
+                  <Button
+                    key={tag}
+                    type="button"
+                    onClick={() => handleTagClick(tag)}
+                    className={`px-2 py-1 mx-2 my-2 rounded ${
+                      tags.includes(tag) ? "bg-orange-500 " : ""
+                    }`}
+                  >
+                    {tag}
+                  </Button>
+                ))}
+              </div>
+
+              <FormField
+                control={control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>

@@ -19,18 +19,28 @@ export const useAddComment = () => {
   return useMutation<
     any,
     Error,
-    { postId: string; userId: string; comment: string }
+    {
+      postId: string;
+      userId: string;
+      userName: string;
+      userImage?: string;
+      comment: string;
+    }
   >({
     mutationKey: ["ADD_COMMENT"],
     mutationFn: async ({
       postId,
       userId,
+      userName,
       comment,
+      userImage = "",
     }: {
       postId: string;
       userId: string;
+      userName: string;
       comment: string;
-    }) => await addComment(postId, userId, comment),
+      userImage?: string;
+    }) => await addComment(postId, userId, userName, comment, userImage),
     onSuccess: () => {
       toast.success("Comment Added Successfully");
     },

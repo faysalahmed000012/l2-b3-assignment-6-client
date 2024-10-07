@@ -2,6 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ChefHat, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 export const FeaturedCards = () => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -18,7 +19,12 @@ export const FeaturedCards = () => (
             <AvatarFallback>FC</AvatarFallback>
           </Avatar>
           <div>
-            <h4 className="text-lg font-semibold">Chef Gordon</h4>
+            <Link
+              href={`/profile/faysal000012@gmail.com`}
+              className="text-lg font-semibold"
+            >
+              Misbahul Haq
+            </Link>
             <p className="text-sm text-gray-600">
               Master of International Cuisine
             </p>

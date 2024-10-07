@@ -43,7 +43,7 @@ export const deletePost = async (id: string) => {
     const res = axiosInstance.delete(`/posts/${id}`, { withCredentials: true });
     return res;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -72,17 +72,82 @@ export const postAction = async (data: any) => {
 export const addComment = async (
   postId: string,
   userId: string,
-  content: string
+  userName: string,
+  content: string,
+  userImage?: string
 ) => {
   const body = {
     postId: postId,
     comment: {
-      user: userId,
+      userId: userId,
+      userName: userName,
+      userImage: userImage || "",
       content: content,
     },
   };
   try {
     const res = await axiosInstance.put("/posts/action/comment", body, {
+      withCredentials: true,
+    });
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const upVote = async (postId: string, userId: string) => {
+  try {
+    const body = {
+      userId,
+      postId,
+    };
+    const res = await axiosInstance.put("/posts/action/upVote", body, {
+      withCredentials: true,
+    });
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const downVote = async (postId: string, userId: string) => {
+  try {
+    const body = {
+      userId,
+      postId,
+    };
+    const res = await axiosInstance.put("/posts/action/downVote", body, {
+      withCredentials: true,
+    });
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPostById = async (postId: string) => {
+  try {
+    const response = await axiosInstance.get(`/posts/${postId}`);
+    return response?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPostByUser = async (userId: string) => {
+  try {
+    const res = await axiosInstance.get(`/posts/user/${userId}`, {
+      withCredentials: true,
+    });
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const userUpvotedPosts = async (userId: string) => {
+  try {
+    const res = await axiosInstance.get(`/posts/user/upvoted/${userId}`, {
       withCredentials: true,
     });
     return res?.data?.data;
