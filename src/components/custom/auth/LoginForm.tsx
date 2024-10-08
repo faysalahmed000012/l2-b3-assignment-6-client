@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useUser } from "@/context/userProvider";
 import { useUserLogin } from "@/hooks/auth.hooks";
 import { LoginSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,8 +21,6 @@ import { z } from "zod";
 import CardWrapper from "./card-wrapper";
 
 const LoginForm = () => {
-  const { setIsLoading: userLoading } = useUser();
-
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -40,7 +37,6 @@ const LoginForm = () => {
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     handleUserLogin(data);
-    userLoading(true);
   };
   useEffect(() => {
     if (!isPending && isSuccess) {
