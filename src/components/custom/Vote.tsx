@@ -3,6 +3,7 @@ import { useUser } from "@/context/userProvider";
 import { getUserDetail } from "@/services/AuthServices";
 import { addRating, downVote, upVote } from "@/services/PostServices";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
+import { redirect } from "next/navigation";
 import { Button } from "../ui/button";
 import StarRating from "./StarRating";
 
@@ -10,6 +11,9 @@ const Vote = ({ post }) => {
   const { user } = useUser();
 
   const handleLike = async () => {
+    if (!user) {
+      redirect("/login");
+    }
     const detailedUser = await getUserDetail(user?.email as string);
 
     if (detailedUser) {
@@ -20,6 +24,9 @@ const Vote = ({ post }) => {
   };
 
   const handledownVote = async () => {
+    if (!user) {
+      redirect("/login");
+    }
     const detailedUser = await getUserDetail(user?.email as string);
     if (detailedUser) {
       downVote(post._id, detailedUser._id as string);
@@ -29,6 +36,9 @@ const Vote = ({ post }) => {
   };
 
   const onRatingChange = async (newRating) => {
+    if (!user) {
+      redirect("/login");
+    }
     const detailedUser = await getUserDetail(user?.email as string);
 
     if (detailedUser) {
