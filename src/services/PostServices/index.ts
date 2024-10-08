@@ -2,9 +2,9 @@
 
 import axiosInstance from "@/config/axiosInstance";
 
-interface IQuery {
+export interface IQuery {
   name: string;
-  value: string;
+  value: string | number;
 }
 
 export const getAllPost = async (queries?: IQuery[]) => {

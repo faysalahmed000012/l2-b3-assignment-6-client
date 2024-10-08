@@ -9,7 +9,7 @@ import { useState } from "react";
 const Login = () => {
   const [email, setEmail] = useState("");
   const handleSubmit = async () => {
-    const res = await forgotPassword(email);
+    await forgotPassword(email);
     setEmail("");
   };
 
