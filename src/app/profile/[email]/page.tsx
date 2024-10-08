@@ -10,7 +10,6 @@ export default async function ProfilePage({
 }: {
   params: { email: string };
 }) {
-  // const [user] = useState(mockUserProfile);
   console.log(params.email);
 
   const user = await getUserDetail(params.email);
@@ -25,7 +24,7 @@ export default async function ProfilePage({
   return (
     <div className="mt-[70px] container mx-auto p-4 max-w-3xl">
       <UserInfo user={user} />
-      <AboutSection bio={user?.bio || "sala tui ke ?"} />
+      <AboutSection bio={user?.bio || "bio is not updated"} />
       <Tabs defaultValue="posts" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="posts">Posts</TabsTrigger>

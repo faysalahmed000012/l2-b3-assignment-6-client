@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -41,12 +42,6 @@ const RegisterForm = () => {
   } = useUserRegistration();
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
-    // const userData = {
-    //   ...data,
-    //   profilePhoto:
-    //     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
-    // };
-
     handleUserRegistration(data);
   };
 

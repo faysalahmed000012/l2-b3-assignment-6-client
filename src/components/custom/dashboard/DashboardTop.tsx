@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import { useUser } from "@/context/userProvider";
 import { getUserDetail } from "@/services/AuthServices";

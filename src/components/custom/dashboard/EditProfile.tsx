@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaRegEdit } from "react-icons/fa";
+import ChangePassword from "./ChangePassword";
 
 interface ProfileFormData {
   name: string;
@@ -30,6 +32,7 @@ export interface IUserDetails {
   comments?: [];
   ratedPosts?: [];
   followers?: [];
+  following?: [];
   profilePicture?: string;
   location?: string;
   isPremium: boolean;
@@ -112,6 +115,7 @@ const EditProfile = () => {
         <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-0">
           Profile Info:
         </h2>
+        <ChangePassword email={user?.email as string} />
         <Button
           onClick={() => setIsEditing(!isEditing)}
           className="w-full sm:w-auto"

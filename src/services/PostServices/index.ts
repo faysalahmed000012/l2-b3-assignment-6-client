@@ -2,10 +2,19 @@
 
 import axiosInstance from "@/config/axiosInstance";
 
-export const getAllPost = async () => {
+interface IQuery {
+  name: string;
+  value: string;
+}
+
+export const getAllPost = async (queries?: IQuery[]) => {
+  const params = new URLSearchParams();
+  if (queries) {
+    queries.forEach((item) => params.append(item.name, item.value as string));
+  }
   try {
-    const res = await axiosInstance.get("/posts");
-    return res.data.data;
+    const res = await axiosInstance.get(`/posts`, { params: params });
+    return res.data;
   } catch (error) {
     console.log(error);
   }
@@ -47,9 +56,9 @@ export const deletePost = async (id: string) => {
   }
 };
 
-export const updatePost = async (data: any) => {
+export const updatePost = async (data: any, postId: string) => {
   try {
-    const res = await axiosInstance.put("/posts/update", data, {
+    const res = await axiosInstance.put(`/posts/update/${postId}`, data, {
       withCredentials: true,
     });
     return res?.data?.data;
@@ -69,11 +78,12 @@ export const postAction = async (data: any) => {
   }
 };
 
-export const addComment = async (
+export const Comment = async (
   postId: string,
   userId: string,
   userName: string,
   content: string,
+  mode: "create" | "update" | "delete",
   userImage?: string
 ) => {
   const body = {
@@ -84,6 +94,7 @@ export const addComment = async (
       userImage: userImage || "",
       content: content,
     },
+    mode: mode,
   };
   try {
     const res = await axiosInstance.put("/posts/action/comment", body, {
@@ -151,6 +162,23 @@ export const userUpvotedPosts = async (userId: string) => {
       withCredentials: true,
     });
     return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addRating = async (
+  postId: string,
+  userId: string,
+  rating: number
+) => {
+  try {
+    const result = await axiosInstance.put(
+      "/posts/action/rating",
+      { postId, userId, rating },
+      { withCredentials: true }
+    );
+    return result?.data?.data;
   } catch (error) {
     console.log(error);
   }

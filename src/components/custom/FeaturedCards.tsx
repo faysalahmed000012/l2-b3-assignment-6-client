@@ -1,11 +1,19 @@
 // FeaturedCards.js
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { ChefHat, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { fadeIn } from "../../../motion/varients";
 
 export const FeaturedCards = () => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+  <motion.div
+    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+    variants={fadeIn("up", 0.4)}
+    initial="hidden"
+    whileInView={"show"}
+    viewport={{ once: false, amount: 0.5 }}
+  >
     <Card className="bg-gradient-to-br from-orange-100 to-orange-200 shadow-lg">
       <CardHeader>
         <h3 className="text-xl font-semibold flex items-center">
@@ -56,5 +64,5 @@ export const FeaturedCards = () => (
         </p>
       </CardContent>
     </Card>
-  </div>
+  </motion.div>
 );

@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useUser } from "@/context/userProvider";
 import { approvePost, deletePost, postAction } from "@/services/PostServices";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Image from "next/image";
@@ -14,6 +15,11 @@ import Link from "next/link";
 import TimeAgo from "../../TimeAgo";
 
 export default function PendingPostCard({ post }: { post: any }) {
+  const { user } = useUser();
+  function createMarkup(c) {
+    return { __html: c };
+  }
+
   const onAdminAction = async (action: "accept" | "reject") => {
     if (action === "accept") {
       const res = await approvePost(post._id);
@@ -56,26 +62,36 @@ export default function PendingPostCard({ post }: { post: any }) {
           height={300}
           className="w-full h-64 object-cover rounded-md mb-4"
         />
-        <p className="text-gray-700 mb-4">{post.description}</p>
+        <div
+          className="text-gray-700 mb-4"
+          dangerouslySetInnerHTML={createMarkup(post.description)}
+        ></div>
         <div className="flex justify-between items-center"></div>
       </CardContent>
       <CardFooter className="flex  items-center justify-between ">
-        <Button
-          disabled={post.status == "posted"}
-          onClick={() => onAdminAction("accept")}
-          className="bg-green-500"
-        >
-          Approve
-        </Button>
+        {user.role == "admin" && (
+          <Button
+            disabled={post.status == "posted"}
+            onClick={() => onAdminAction("accept")}
+            className="bg-green-500"
+          >
+            Approve
+          </Button>
+        )}
         <Button
           onClick={async () => await deletePost(post._id)}
           className="bg-red-500"
         >
           Delete
         </Button>
-        <Button onClick={() => onAdminAction("reject")} className="bg-red-500">
-          Reject
-        </Button>
+        {user.role == "admin" && (
+          <Button
+            onClick={() => onAdminAction("reject")}
+            className="bg-red-500"
+          >
+            Reject
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

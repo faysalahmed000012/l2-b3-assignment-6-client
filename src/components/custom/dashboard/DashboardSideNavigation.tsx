@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useUser } from "@/context/userProvider";
 import { cn } from "@/lib/utils";
 import {
   CircleDollarSign,
@@ -16,36 +17,40 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-const routes = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-    variant: "default",
-  },
-  {
-    title: "Users",
-    href: "/dashboard/users",
-    icon: UsersRound,
-    variant: "ghost",
-  },
-  {
-    title: "Posts",
-    href: "/dashboard/posts",
-    icon: StickyNote,
-    variant: "ghost",
-  },
-  {
-    title: "Subscription",
-    href: "/dashboard/subscribe",
-    icon: CircleDollarSign,
-    variant: "ghost",
-  },
-];
-
 export default function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useUser();
+
+  const routes = [
+    {
+      title: "Dashboard",
+      href: "/dashboard",
+      icon: LayoutDashboard,
+      variant: "default",
+    },
+
+    {
+      title: "Posts",
+      href: "/dashboard/posts",
+      icon: StickyNote,
+      variant: "ghost",
+    },
+
+    user && user.role == "admin"
+      ? {
+          title: "Users",
+          href: "/dashboard/users",
+          icon: UsersRound,
+          variant: "ghost",
+        }
+      : {
+          title: "Subscription",
+          href: "/dashboard/subscribe",
+          icon: CircleDollarSign,
+          variant: "ghost",
+        },
+  ];
 
   return (
     <div>
@@ -68,20 +73,23 @@ export default function Sidebar() {
                 </h2>
                 <ScrollArea className="h-[calc(100vh-8rem)] px-1">
                   <nav className="flex flex-col space-y-2">
-                    {routes.map((route) => (
-                      <Link key={route.href} href={route.href}>
-                        <Button
-                          variant={
-                            pathname === route.href ? "default" : "ghost"
-                          }
-                          className="w-full justify-start"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <route.icon className="mr-2 h-4 w-4" />
-                          {route.title}
-                        </Button>
-                      </Link>
-                    ))}
+                    {routes.map((route) => {
+                      console.log(route);
+                      return (
+                        <Link key={route.href} href={route.href}>
+                          <Button
+                            variant={
+                              pathname === route.href ? "default" : "ghost"
+                            }
+                            className="w-full justify-start"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <route.icon className="mr-2 h-4 w-4" />
+                            {route.title}
+                          </Button>
+                        </Link>
+                      );
+                    })}
                   </nav>
                 </ScrollArea>
               </div>

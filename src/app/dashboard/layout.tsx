@@ -1,3 +1,4 @@
+"use client";
 import Sidebar from "@/components/custom/dashboard/DashboardSideNavigation";
 import DashboardTop from "@/components/custom/dashboard/DashboardTop";
 import { ReactNode } from "react";

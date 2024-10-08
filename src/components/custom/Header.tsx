@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/userProvider";
 import { logout } from "@/services/AuthServices";
-import { LayoutDashboard, Menu, PlusCircle, X } from "lucide-react";
+import { LayoutDashboard, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { CreateAndEditPost } from "./CreateAndEditPost";
@@ -20,16 +20,11 @@ export default function Header() {
     user
       ? { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard }
       : { name: "Login", href: "/auth/login" },
-    // user && !isLoading && { name: "Profile", href: `/profile/${user?.email}` },
   ];
 
   const handleLogout = () => {
     logout();
     userLoading(true);
-
-    // if (protectedRoutes.some((route) => pathname.match(route))) {
-    //   router.push("/");
-    // }
   };
 
   return (
@@ -52,6 +47,14 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+            {user && (
+              <Link
+                href={`/profile/${user.email}`}
+                className="flex items-center text-gray-600 hover:text-orange-600 transition-colors"
+              >
+                Profile
+              </Link>
+            )}
             {user && (
               <Button
                 onClick={() => handleLogout()}
@@ -89,14 +92,15 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
-            <Button
-              variant="ghost"
-              className="w-full justify-start"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <PlusCircle className="mr-2" size={18} />
-              New Recipe
-            </Button>
+            {user && (
+              <Button
+                onClick={() => handleLogout()}
+                className="flex items-center text-gray-600 hover:text-orange-600 transition-colors bg-transparent hover:bg-gray-200"
+              >
+                Log out
+              </Button>
+            )}
+            <CreateAndEditPost />
           </nav>
         )}
       </div>

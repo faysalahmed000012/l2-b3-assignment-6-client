@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use server";
 
 import { IUserDetails } from "@/components/custom/dashboard/EditProfile";
@@ -10,7 +11,6 @@ export const registerUser = async (userData) => {
     const { data } = await axiosInstance.post("/auth/register", userData);
 
     if (data.success) {
-      console.log(data);
       cookies().set("accessToken", data?.AccessToken);
       cookies().set("refreshToken", data?.RefreshToken);
     }
@@ -24,7 +24,6 @@ export const registerUser = async (userData) => {
 export const loginUser = async (userData) => {
   try {
     const { data } = await axiosInstance.post("/auth/login", userData);
-    console.log(data.AccessToken);
     if (data.success) {
       cookies().set("accessToken", data?.AccessToken);
       cookies().set("refreshToken", data?.RefreshToken);
@@ -104,6 +103,7 @@ export const updateUser = async (data: FormData) => {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      withCredentials: true,
     });
     return res?.data?.data;
   } catch (error) {
@@ -111,11 +111,11 @@ export const updateUser = async (data: FormData) => {
   }
 };
 
-export const blockUser = async (email: string) => {
+export const blockUser = async (email: string, block: boolean) => {
   try {
     const res = await axiosInstance.put(
       "/user/block",
-      { email },
+      { email, block },
       {
         withCredentials: true,
       }
@@ -126,11 +126,11 @@ export const blockUser = async (email: string) => {
   }
 };
 
-export const makeAdmin = async (email: string) => {
+export const makeAdmin = async (email: string, role: "user" | "admin") => {
   try {
     const res = await axiosInstance.put(
       "/user/makeAdmin",
-      { email },
+      { email, role },
       { withCredentials: true }
     );
     return res?.data?.data;
@@ -139,14 +139,66 @@ export const makeAdmin = async (email: string) => {
   }
 };
 
-export const handleFollow = async (follower: string, following: string) => {
+export const handleFollow = async (
+  follower: string,
+  following: string,
+  type: "follow" | "unfollow"
+) => {
   try {
     const res = await axiosInstance.put(
       "/user/follow",
-      { following, follower },
+      { following, follower, type },
       { withCredentials: true }
     );
     return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteUser = async (userId: string) => {
+  try {
+    const res = await axiosInstance.delete(`/user/${userId}`, {
+      withCredentials: true,
+    });
+    return res?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const passwordChange = async (
+  email: string,
+  oldPassword: string,
+  newPassword: string
+) => {
+  try {
+    const res = await axiosInstance.put("/auth/change-password", {
+      email,
+      oldPassword,
+      newPassword,
+    });
+    return res?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const forgotPassword = async (email: string) => {
+  try {
+    const res = await axiosInstance.post("/auth/forgot-password", { email });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const resetPassword = async (token: string, password: string) => {
+  try {
+    const res = await axiosInstance.post(`/auth/reset-password/${token}`, {
+      password,
+    });
+    return res;
   } catch (error) {
     console.log(error);
   }

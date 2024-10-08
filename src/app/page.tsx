@@ -1,111 +1,72 @@
+// @ts-nocheck
+"use client";
 import { FeaturedCards } from "@/components/custom/FeaturedCards";
 import Header from "@/components/custom/Header";
 import RecipeCard from "@/components/custom/RecipeCard";
 import { SearchAndFilter } from "@/components/custom/SearchAndFilter";
 import { getAllPost } from "@/services/PostServices";
+import { motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { fadeIn } from "../../motion/varients";
 
-// types/recipe.ts
+export default function Home() {
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [tag, setTag] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
-export default async function Home() {
-  const posts = await getAllPost();
+  const fetchData = useCallback(
+    async (resetPosts = false) => {
+      const params = [
+        { name: "limit", value: 2 },
+        { name: "page", value: resetPosts ? 1 : page },
+        { name: "searchTerm", value: searchTerm },
+      ];
+      if (tag !== "All") {
+        params.push({ name: "tags", value: tag });
+      }
+      console.log(params);
+      try {
+        const res = await getAllPost(params);
 
-  // const handleSearch = (query: string) => {
-  //   const lowercaseQuery = query.toLowerCase();
-  //   const filtered = recipes.filter(
-  //     (recipe) =>
-  //       recipe.title.toLowerCase().includes(lowercaseQuery) ||
-  //       recipe.description.toLowerCase().includes(lowercaseQuery)
-  //   );
-  //   setFilteredRecipes(filtered);
-  // };
+        if (res.meta.page >= res.meta.totalPage) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
 
-  // const handleFilter = (category: string) => {
-  //   if (category === "all") {
-  //     setFilteredRecipes(recipes);
-  //   } else {
-  //     const filtered = recipes.filter((recipe) => recipe.category === category);
-  //     setFilteredRecipes(filtered);
-  //   }
-  // };
+        if (resetPosts) {
+          setPosts(res?.data);
+          setPage(2);
+        } else {
+          setPosts((prevPosts) => [...prevPosts, ...res?.data]);
+          setPage((prevPage) => prevPage + 1);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    },
+    [page, tag, searchTerm]
+  );
 
-  // const handleVote = (id: number, voteType: "up" | "down") => {
-  //   const updatedRecipes = recipes.map((recipe) =>
-  //     recipe.id === id
-  //       ? {
-  //           ...recipe,
-  //           votes: voteType === "up" ? recipe.votes + 1 : recipe.votes - 1,
-  //         }
-  //       : recipe
-  //   );
-  //   setRecipes(updatedRecipes);
-  //   setFilteredRecipes(
-  //     filteredRecipes.map((recipe) =>
-  //       recipe.id === id
-  //         ? {
-  //             ...recipe,
-  //             votes: voteType === "up" ? recipe.votes + 1 : recipe.votes - 1,
-  //           }
-  //         : recipe
-  //     )
-  //   );
-  // };
+  useEffect(() => {
+    setPage(1);
+    fetchData(true);
+  }, [tag, searchTerm]);
 
-  // const handleRating = (id: number, rating: number) => {
-  //   const updatedRecipes = recipes.map((recipe) =>
-  //     recipe.id === id
-  //       ? { ...recipe, rating: (recipe.rating + rating) / 2 }
-  //       : recipe
-  //   );
-  //   setRecipes(updatedRecipes);
-  //   setFilteredRecipes(
-  //     filteredRecipes.map((recipe) =>
-  //       recipe.id === id
-  //         ? { ...recipe, rating: (recipe.rating + rating) / 2 }
-  //         : recipe
-  //     )
-  //   );
-  // };
-
-  // const handleAddComment = (id: number, comment: string) => {
-  //   const updatedRecipes = recipes.map((recipe) =>
-  //     recipe.id === id
-  //       ? {
-  //           ...recipe,
-  //           comments: [
-  //             ...recipe.comments,
-  //             {
-  //               id: recipe.comments.length + 1,
-  //               author: "CurrentUser",
-  //               text: comment,
-  //             },
-  //           ],
-  //         }
-  //       : recipe
-  //   );
-  //   setRecipes(updatedRecipes);
-  //   setFilteredRecipes(
-  //     filteredRecipes.map((recipe) =>
-  //       recipe.id === id
-  //         ? {
-  //             ...recipe,
-  //             comments: [
-  //               ...recipe.comments,
-  //               {
-  //                 id: recipe.comments.length + 1,
-  //                 author: "CurrentUser",
-  //                 text: comment,
-  //               },
-  //             ],
-  //           }
-  //         : recipe
-  //     )
-  //   );
-  // };
   return (
     <div className="min-h-screen ">
       <Header />
       <main className="container mx-auto p-4 pt-20">
-        <div className="mb-6">
+        <motion.div
+          className="mb-6"
+          variants={fadeIn("up", 0.2)}
+          initial="hidden"
+          whileInView={"show"}
+          viewport={{ once: true, amount: 0.7 }}
+        >
           <h1 className="text-center text-4xl font-bold mb-4 text-gray-800">
             Discover Delicious Recipes
           </h1>
@@ -113,14 +74,34 @@ export default async function Home() {
             Join our community of food lovers and share your culinary creations
             with the world!
           </p>
-        </div>
-        <SearchAndFilter />
+        </motion.div>
+        <SearchAndFilter
+          setSearchTerm={setSearchTerm}
+          setTag={setTag}
+          tag={tag}
+        />
         <FeaturedCards />
-        <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-          {posts.map((post) => (
-            <RecipeCard key={post._id} post={post} />
-          ))}
-        </div>
+        <InfiniteScroll
+          dataLength={posts.length}
+          next={fetchData}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
+          endMessage={
+            <p className="text-center mt-6 text-gray-300">End of Post</p>
+          }
+        >
+          <motion.div
+            className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-4"
+            variants={fadeIn("up", 0.4)}
+            initial="hidden"
+            whileInView={"show"}
+            viewport={{ once: false, amount: 0.5 }}
+          >
+            {posts?.map((post) => (
+              <RecipeCard key={post._id} post={post} />
+            ))}
+          </motion.div>
+        </InfiniteScroll>
       </main>
     </div>
   );

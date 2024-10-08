@@ -1,12 +1,15 @@
 import Comments from "@/components/custom/Comments";
 import TimeAgo from "@/components/custom/TimeAgo";
-import { Button } from "@/components/ui/button";
+import Vote from "@/components/custom/Vote";
 import { getPostById } from "@/services/PostServices";
-import { Clock, Star, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Clock } from "lucide-react";
 import Image from "next/image";
 
 const RecipeDetail = async ({ params }: { params: { id: string } }) => {
   const post = await getPostById(params.id);
+  function createMarkup(c) {
+    return { __html: c };
+  }
   return (
     <div className="px-[20px] md:px-[80px] mt-[140px]">
       <div className="md:flex justify-center ">
@@ -35,44 +38,17 @@ const RecipeDetail = async ({ params }: { params: { id: string } }) => {
           </div>
 
           <div className="mt-6 flex-col justify-between items-center">
-            <div className="flex items-center space-x-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Button
-                  key={star}
-                  variant="ghost"
-                  size="sm"
-                  // onClick={() => onRate(recipe.id, star)}
-                >
-                  <Star
-                    className={`h-4 w-4 ${
-                      star <= 4.4
-                        ? "text-yellow-400 fill-yellow-400"
-                        : "text-gray-300"
-                    }`}
-                  />
-                </Button>
-              ))}
-              <span className="text-sm ml-2">{4.4}</span>
-            </div>
             <div className="flex items-center space-x-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                //   onClick={() => onVote(recipe.id, "up")}
-              >
-                <ThumbsUp className="mr-1 h-4 w-4" />
-                <span className="text-xs">
-                  {post?.upVotes + post?.downVotes || 0}
-                </span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                //   onClick={() => onVote(recipe.id, "down")}
-              >
-                <ThumbsDown className="mr-1 h-4 w-4" />
-              </Button>
+              <Vote post={post} />
             </div>
+          </div>
+          <div className="flex items-center justify-start gap-3">
+            {post?.tags &&
+              post.tags.map((tag: string) => (
+                <p key={tag} className="text-lg mt-4">
+                  #{tag}
+                </p>
+              ))}
           </div>
           <p className="text-lg font-bold mt-4">Ingredients :</p>
           {post?.ingredients &&
@@ -81,12 +57,15 @@ const RecipeDetail = async ({ params }: { params: { id: string } }) => {
                 {ingredient.name} - {ingredient.quantity}
               </p>
             ))}
-          <p className="text-gray-700 text-lg mt-3 md:w-[60%]">
-            {post?.description}
-          </p>
+          <div
+            dangerouslySetInnerHTML={createMarkup(post?.description)}
+            className="text-gray-700 text-lg mt-3 md:w-[60%]"
+          ></div>
         </div>
       </div>
-      <Comments comments={post?.comments} />
+      <div id="comments">
+        <Comments postId={post?._id} comments={post?.comments} />
+      </div>
     </div>
   );
 };

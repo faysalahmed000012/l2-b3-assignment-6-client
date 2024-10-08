@@ -1,4 +1,5 @@
 "use client";
+export const fetchCache = "force-not-store";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -8,13 +9,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { blockUser, makeAdmin } from "@/services/AuthServices";
+import { blockUser, deleteUser, makeAdmin } from "@/services/AuthServices";
 import Image from "next/image";
 
-const UsersTable = (userData: any) => {
+const UsersTable = ({ userData }) => {
+  const handleDelete = async (userId: string) => {
+    if (confirm("Are you Sure You Want To Delete This User ?") == true) {
+      const res = await deleteUser(userId);
+    } else {
+      return;
+    }
+  };
+
+  const handleAdmin = async (email: string, role: "admin" | "user") => {
+    let res;
+    if (role == "admin") {
+      res = await makeAdmin(email, "admin");
+    } else if (role == "user") {
+      res = await makeAdmin(email, "user");
+    }
+  };
+  const handleBlock = async (email: string, role: boolean) => {
+    if (role == false) {
+      await blockUser(email, false);
+    } else if (role == true) {
+      await blockUser(email, true);
+    }
+  };
+
   return (
     <Table>
-      {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Image</TableHead>
@@ -24,7 +48,7 @@ const UsersTable = (userData: any) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {userData?.userData?.map((user) => (
+        {userData?.map((user) => (
           <TableRow key={user._id}>
             <TableCell className="font-medium">
               <Image
@@ -40,18 +64,48 @@ const UsersTable = (userData: any) => {
             <TableCell>{user.role}</TableCell>
             <TableCell className="text-right">
               <div className="flex items-center justify-center gap-3">
+                {user?.role == "admin" ? (
+                  <>
+                    <Button
+                      onClick={() => handleAdmin(user.email, "user")}
+                      disabled={user.isBlocked}
+                      className="bg-orange-500 hover:bg-orange-700"
+                    >
+                      Remove From Admin
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => handleAdmin(user.email, "admin")}
+                      disabled={user.isBlocked}
+                      className="bg-orange-500 hover:bg-orange-700"
+                    >
+                      Make Admin
+                    </Button>
+                  </>
+                )}
+                {user.isBlocked ? (
+                  <>
+                    <Button onClick={() => handleBlock(user.email, false)}>
+                      Unblock User
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      disabled={user?.isBlocked || user.role == "admin"}
+                      onClick={() => handleBlock(user.email, true)}
+                    >
+                      Block User
+                    </Button>
+                  </>
+                )}
                 <Button
-                  onClick={async () => await makeAdmin(user.email)}
-                  disabled={user.role == "admin" || user.isBlocked}
-                  className="bg-orange-500 hover:bg-orange-700"
+                  variant="destructive"
+                  onClick={() => handleDelete(user._id)}
                 >
-                  {user.role == "admin" ? "Admin" : "Make Admin"}
-                </Button>
-                <Button
-                  disabled={user?.isBlocked || user.role == "admin"}
-                  onClick={async () => await blockUser(user.email)}
-                >
-                  {user.isBlocked ? "Blocked" : "Block"}
+                  Delete user
                 </Button>
               </div>
             </TableCell>
