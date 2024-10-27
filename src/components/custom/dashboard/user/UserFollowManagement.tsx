@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,10 +7,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Image from "next/image";
-import { useRouter } from "next/router";
 
 const UserFollowManagement = ({ userData }) => {
-  const router = useRouter();
   return (
     <div>
       <Table>
@@ -38,15 +35,7 @@ const UserFollowManagement = ({ userData }) => {
               <TableCell className="font-medium">{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
-              <TableCell className="text-right">
-                <div className="flex items-center justify-center gap-3">
-                  <Button
-                    onClick={() => router.push(`/profile/${user?.email}`)}
-                  >
-                    Profile
-                  </Button>
-                </div>
-              </TableCell>
+              <TableCell className="text-right"></TableCell>
             </TableRow>
           ))}
         </TableBody>
