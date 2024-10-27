@@ -56,6 +56,8 @@ const Comments = ({ comments, postId }) => {
       mode: "create",
       comment: e.target.comment.value,
     });
+
+    e.target.comment.value = "";
   };
 
   const handleDeleteComment = (comment) => {
@@ -126,13 +128,15 @@ const Comments = ({ comments, postId }) => {
                     src={comment.userImage || "https://github.com/shadcn.png"}
                     alt="@shadcn"
                   />
-                  <AvatarFallback>{comment?.userName}</AvatarFallback>
+                  <AvatarFallback className="bg-purple-500 text-white h-10 w-10 rounded-full flex items-center justify-center">
+                    {comment?.userName}
+                  </AvatarFallback>
                 </Avatar>
                 <p className="text-xl">{comment?.userName}</p>
                 <div className="w-1 h-1 rounded-full bg-gray-600"></div>
-                <p className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600">
                   <TimeAgo time={new Date(comment?.updatedAt)} />
-                </p>
+                </div>
                 {comment.userId == detailedUser?._id && (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -172,7 +176,10 @@ const Comments = ({ comments, postId }) => {
                                 <DialogTitle>Edit Comment</DialogTitle>
                               </DialogHeader>
                               <div className="grid gap-4 py-4">
-                                <Textarea name="comment" />
+                                <Textarea
+                                  defaultValue={comment.content}
+                                  name="comment"
+                                />
                               </div>
                               <DialogFooter>
                                 <DialogClose asChild>

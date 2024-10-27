@@ -4,6 +4,7 @@
 import { IUserDetails } from "@/components/custom/dashboard/EditProfile";
 import axiosInstance from "@/config/axiosInstance";
 import { jwtDecode } from "jwt-decode";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export const registerUser = async (userData) => {
@@ -14,7 +15,7 @@ export const registerUser = async (userData) => {
       cookies().set("accessToken", data?.AccessToken);
       cookies().set("refreshToken", data?.RefreshToken);
     }
-
+    revalidatePath("/");
     return data;
   } catch (error: any) {
     throw new Error(error);
@@ -28,9 +29,10 @@ export const loginUser = async (userData) => {
       cookies().set("accessToken", data?.AccessToken);
       cookies().set("refreshToken", data?.RefreshToken);
     }
-
+    revalidatePath("/");
     return data;
   } catch (error: any) {
+    console.log(error);
     throw new Error(error);
   }
 };
@@ -47,7 +49,6 @@ export const getCurrentUser = async () => {
 
   if (accessToken) {
     decodedToken = await jwtDecode(accessToken);
-
     return {
       email: decodedToken.email,
       role: decodedToken.role,
@@ -71,7 +72,6 @@ export const getNewAccessToken = async () => {
         cookies: `refreshToken=${refreshToken}`,
       },
     });
-
     return res.data;
   } catch (error) {
     throw new Error("Failed to get new access token");
@@ -105,6 +105,7 @@ export const updateUser = async (data: FormData) => {
       },
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -120,6 +121,7 @@ export const blockUser = async (email: string, block: boolean) => {
         withCredentials: true,
       }
     );
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -133,6 +135,7 @@ export const makeAdmin = async (email: string, role: "user" | "admin") => {
       { email, role },
       { withCredentials: true }
     );
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -150,6 +153,7 @@ export const handleFollow = async (
       { following, follower, type },
       { withCredentials: true }
     );
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -161,6 +165,7 @@ export const deleteUser = async (userId: string) => {
     const res = await axiosInstance.delete(`/user/${userId}`, {
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -178,6 +183,7 @@ export const passwordChange = async (
       oldPassword,
       newPassword,
     });
+    revalidatePath("/");
     return res?.data;
   } catch (error) {
     console.log(error);
@@ -187,6 +193,7 @@ export const passwordChange = async (
 export const forgotPassword = async (email: string) => {
   try {
     const res = await axiosInstance.post("/auth/forgot-password", { email });
+    revalidatePath("/");
     return res;
   } catch (error) {
     console.log(error);
@@ -198,7 +205,19 @@ export const resetPassword = async (token: string, password: string) => {
     const res = await axiosInstance.post(`/auth/reset-password/${token}`, {
       password,
     });
+    revalidatePath("/");
     return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFollowersAndFollowing = async (userId: string) => {
+  try {
+    const res = await axiosInstance.get(`/user/follow/${userId}`);
+
+    revalidatePath("/");
+    return res.data;
   } catch (error) {
     console.log(error);
   }

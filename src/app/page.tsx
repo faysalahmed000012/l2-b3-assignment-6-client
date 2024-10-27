@@ -8,7 +8,6 @@ import { getAllPost } from "@/services/PostServices";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { fadeIn } from "../../motion/varients";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -60,13 +59,7 @@ export default function Home() {
     <div className="min-h-screen ">
       <Header />
       <main className="container mx-auto p-4 pt-20">
-        <motion.div
-          className="mb-6"
-          variants={fadeIn("up", 0.2)}
-          initial="hidden"
-          whileInView={"show"}
-          viewport={{ once: true, amount: 0.7 }}
-        >
+        <motion.div className="mb-6">
           <h1 className="text-center text-4xl font-bold mb-4 text-gray-800">
             Discover Delicious Recipes
           </h1>
@@ -90,13 +83,7 @@ export default function Home() {
             <p className="text-center mt-6 text-gray-300">End of Post</p>
           }
         >
-          <motion.div
-            className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-4"
-            variants={fadeIn("up", 0.4)}
-            initial="hidden"
-            whileInView={"show"}
-            viewport={{ once: false, amount: 0.5 }}
-          >
+          <motion.div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
             {posts?.map((post) => (
               <RecipeCard key={post._id} post={post} />
             ))}

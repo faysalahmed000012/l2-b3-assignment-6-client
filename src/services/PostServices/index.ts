@@ -1,6 +1,7 @@
 "use server";
 
 import axiosInstance from "@/config/axiosInstance";
+import { revalidatePath } from "next/cache";
 
 export interface IQuery {
   name: string;
@@ -28,6 +29,7 @@ export const createPost = async (data: FormData) => {
       },
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -41,6 +43,7 @@ export const approvePost = async (id: string) => {
       url: `/posts/approve/${id}`,
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -50,6 +53,7 @@ export const approvePost = async (id: string) => {
 export const deletePost = async (id: string) => {
   try {
     const res = axiosInstance.delete(`/posts/${id}`, { withCredentials: true });
+    revalidatePath("/");
     return res;
   } catch (error) {
     throw error;
@@ -61,6 +65,7 @@ export const updatePost = async (data: any, postId: string) => {
     const res = await axiosInstance.put(`/posts/update/${postId}`, data, {
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -72,6 +77,7 @@ export const postAction = async (data: any) => {
     const res = await axiosInstance.put("/posts/action", data, {
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -100,6 +106,7 @@ export const Comment = async (
     const res = await axiosInstance.put("/posts/action/comment", body, {
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -115,6 +122,7 @@ export const upVote = async (postId: string, userId: string) => {
     const res = await axiosInstance.put("/posts/action/upVote", body, {
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -130,6 +138,7 @@ export const downVote = async (postId: string, userId: string) => {
     const res = await axiosInstance.put("/posts/action/downVote", body, {
       withCredentials: true,
     });
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -178,7 +187,17 @@ export const addRating = async (
       { postId, userId, rating },
       { withCredentials: true }
     );
+    revalidatePath("/");
     return result?.data?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllLikes = async (userId: string) => {
+  try {
+    const res = await axiosInstance.get(`/posts/user/getLikes/${userId}`);
+    return res?.data;
   } catch (error) {
     console.log(error);
   }

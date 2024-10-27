@@ -3,16 +3,22 @@ import { useUser } from "@/context/userProvider";
 import { getUserDetail } from "@/services/AuthServices";
 import { addRating, downVote, upVote } from "@/services/PostServices";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
-import { redirect } from "next/navigation";
+
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import StarRating from "./StarRating";
 
 const Vote = ({ post }) => {
   const { user } = useUser();
+  const router = useRouter();
+  // let userRating;
+  // if (user) {
+  //   userRating = post.ratings.find((rating) => rating.user._id === user._id);
+  // }
 
   const handleLike = async () => {
     if (!user) {
-      redirect("/login");
+      router.push("/login");
     }
     const detailedUser = await getUserDetail(user?.email as string);
 
@@ -25,7 +31,7 @@ const Vote = ({ post }) => {
 
   const handledownVote = async () => {
     if (!user) {
-      redirect("/login");
+      router.push("/login");
     }
     const detailedUser = await getUserDetail(user?.email as string);
     if (detailedUser) {
@@ -37,17 +43,12 @@ const Vote = ({ post }) => {
 
   const onRatingChange = async (newRating) => {
     if (!user) {
-      redirect("/login");
+      router.push("/login");
     }
     const detailedUser = await getUserDetail(user?.email as string);
 
     if (detailedUser) {
-      const rating = await addRating(
-        post._id,
-        detailedUser._id as string,
-        newRating
-      );
-      console.log(rating);
+      await addRating(post._id, detailedUser._id as string, newRating);
     } else {
       alert("Please login to upVote");
     }
@@ -67,7 +68,7 @@ const Vote = ({ post }) => {
         <Button variant="ghost" size="sm" onClick={handleLike}>
           <ThumbsUp className="mr-1 h-4 w-4" />
           <span className="text-xs">
-            {post?.upVotes + post?.downVotes || 0}
+            {post?.upVotes - post?.downVotes || 0}
           </span>
         </Button>
         <Button variant="ghost" size="sm" onClick={handledownVote}>

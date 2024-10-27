@@ -7,9 +7,13 @@ import { useUser } from "@/context/userProvider";
 import { cn } from "@/lib/utils";
 import {
   CircleDollarSign,
+  Edit2Icon,
   LayoutDashboard,
   Menu,
   StickyNote,
+  User,
+  Users2Icon,
+  UsersIcon,
   UsersRound,
   X,
 } from "lucide-react";
@@ -31,9 +35,33 @@ export default function Sidebar() {
     },
 
     {
+      title: "My Profile",
+      href: "/dashboard/profile",
+      icon: User,
+      variant: "ghost",
+    },
+    {
       title: "Posts",
       href: "/dashboard/posts",
       icon: StickyNote,
+      variant: "ghost",
+    },
+    {
+      title: "Edit Profile",
+      href: "/dashboard/editProfile",
+      icon: Edit2Icon,
+      variant: "ghost",
+    },
+    {
+      title: "Followers",
+      href: "/dashboard/followers",
+      icon: UsersIcon,
+      variant: "ghost",
+    },
+    {
+      title: "Following",
+      href: "/dashboard/following",
+      icon: Users2Icon,
       variant: "ghost",
     },
 
@@ -74,7 +102,6 @@ export default function Sidebar() {
                 <ScrollArea className="h-[calc(100vh-8rem)] px-1">
                   <nav className="flex flex-col space-y-2">
                     {routes.map((route) => {
-                      console.log(route);
                       return (
                         <Link key={route.href} href={route.href}>
                           <Button

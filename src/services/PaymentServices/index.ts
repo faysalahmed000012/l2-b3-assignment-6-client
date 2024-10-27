@@ -1,6 +1,7 @@
 "use server";
 
 import axiosInstance from "@/config/axiosInstance";
+import { revalidatePath } from "next/cache";
 
 export const makePayment = async (userId: string) => {
   try {
@@ -11,7 +12,7 @@ export const makePayment = async (userId: string) => {
         withCredentials: true,
       }
     );
-
+    revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);

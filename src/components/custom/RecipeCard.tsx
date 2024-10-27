@@ -70,7 +70,9 @@ export default function RecipeCard({ post }: { post: any }) {
                 className="w-10 h-10 rounded-full"
                 src={post?.user?.profilePicture}
               />
-              <AvatarFallback>{post?.user?.name}</AvatarFallback>
+              <AvatarFallback className="bg-purple-500 text-white h-10 w-10 rounded-full flex items-center justify-center">
+                {post?.user?.name[0]}
+              </AvatarFallback>
             </Avatar>
             <div>
               <Link href={`/recipe/${post?._id}`}>

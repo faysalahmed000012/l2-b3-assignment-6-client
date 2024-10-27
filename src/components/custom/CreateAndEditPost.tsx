@@ -161,7 +161,7 @@ export function CreateAndEditPost({ isEditmode = false, editData = null }) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] overflow-y-scroll md:max-w-[700px]">
+      <DialogContent className="max-h-[90vh] overflow-auto md:max-w-[700px]">
         <DialogHeader>
           <DialogTitle>
             <h1 className="text-orange-500 text-xl">
