@@ -1,4 +1,3 @@
-import { IUser } from "@/redux/auth/authSlice";
 import { getCurrentUser } from "@/services/AuthServices";
 import {
   createContext,
@@ -11,6 +10,13 @@ import {
 } from "react";
 
 const UserContext = createContext<IUserProviderValues | undefined>(undefined);
+
+interface IUser {
+  email: string;
+  role: "admin" | "user";
+  iat: any;
+  exp: any;
+}
 
 interface IUserProviderValues {
   user: IUser | null;
@@ -27,6 +33,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     const user = await getCurrentUser();
 
     setUser(user);
+
     setIsLoading(false);
   };
 

@@ -122,7 +122,7 @@ export const upVote = async (postId: string, userId: string) => {
     const res = await axiosInstance.put("/posts/action/upVote", body, {
       withCredentials: true,
     });
-    revalidatePath("/");
+    // revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);
@@ -138,7 +138,7 @@ export const downVote = async (postId: string, userId: string) => {
     const res = await axiosInstance.put("/posts/action/downVote", body, {
       withCredentials: true,
     });
-    revalidatePath("/");
+    // revalidatePath("/");
     return res?.data?.data;
   } catch (error) {
     console.log(error);

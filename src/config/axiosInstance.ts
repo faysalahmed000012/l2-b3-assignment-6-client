@@ -3,7 +3,8 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 const axiosInstance = axios.create({
-  baseURL: "https://assignment-6-server-plum.vercel.app/api",
+  // baseURL: "https://assignment-6-server-plum.vercel.app/api",
+  baseURL: "http://localhost:5000/api",
 });
 
 axiosInstance.interceptors.request.use(

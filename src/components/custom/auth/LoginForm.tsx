@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/context/userProvider";
 import { useUserLogin } from "@/hooks/auth.hooks";
 import { LoginSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +23,7 @@ import CardWrapper from "./card-wrapper";
 const LoginForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { setIsLoading: userLoading } = useUser();
 
   const redirect = searchParams.get("redirect");
   const form = useForm({
@@ -33,10 +34,17 @@ const LoginForm = () => {
     },
   });
 
-  const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
+  const {
+    mutate: handleUserLogin,
+    isPending,
+    isSuccess,
+    isError,
+    data: loginData,
+  } = useUserLogin();
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     handleUserLogin(data);
+    userLoading(true);
   };
   useEffect(() => {
     if (!isPending && isSuccess) {

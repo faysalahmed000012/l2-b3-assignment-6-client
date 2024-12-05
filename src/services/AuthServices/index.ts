@@ -29,7 +29,7 @@ export const loginUser = async (userData) => {
       cookies().set("accessToken", data?.AccessToken);
       cookies().set("refreshToken", data?.RefreshToken);
     }
-    revalidatePath("/");
+    // revalidatePath("/");
     return data;
   } catch (error: any) {
     console.log(error);
@@ -56,7 +56,6 @@ export const getCurrentUser = async () => {
       exp: decodedToken.exp,
     };
   }
-
   return decodedToken;
 };
 

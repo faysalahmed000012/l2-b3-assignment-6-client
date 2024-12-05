@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { FeaturedCards } from "@/components/custom/FeaturedCards";
 import Header from "@/components/custom/Header";
@@ -26,7 +25,6 @@ export default function Home() {
       if (tag !== "All") {
         params.push({ name: "tags", value: tag });
       }
-      console.log(params);
       try {
         const res = await getAllPost(params);
 

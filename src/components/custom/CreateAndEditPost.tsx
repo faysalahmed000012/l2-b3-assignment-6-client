@@ -26,6 +26,7 @@ import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/css/froala_style.min.css";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Label } from "../ui/label";
@@ -40,6 +41,7 @@ interface IFormData {
 }
 
 export function CreateAndEditPost({ isEditmode = false, editData = null }) {
+  const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(
     editData?.image || null
@@ -63,7 +65,9 @@ export function CreateAndEditPost({ isEditmode = false, editData = null }) {
         console.log(error);
       }
     };
-    fetchUser();
+    if (user) {
+      fetchUser();
+    }
     return () => {
       ignore = true;
     };
