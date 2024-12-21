@@ -28,7 +28,7 @@ export default function Home() {
       try {
         const res = await getAllPost(params);
 
-        if (res.meta.page >= res.meta.totalPage) {
+        if (res?.meta && res?.meta?.page >= res?.meta?.totalPage) {
           setHasMore(false);
         } else {
           setHasMore(true);
