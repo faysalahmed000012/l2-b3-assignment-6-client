@@ -12,6 +12,15 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
         {children}
       </div>
     </div>
+    // <>
+    //   <SidebarProvider>
+    //     <AppSidebar />
+    //     <main>
+    //       <SidebarTrigger />
+    //       {children}
+    //     </main>
+    //   </SidebarProvider>
+    // </>
   );
 };
 

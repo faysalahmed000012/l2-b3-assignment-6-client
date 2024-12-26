@@ -19,6 +19,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useUser } from "@/context/userProvider";
 import { useCreatePost, useUpdatePost } from "@/hooks/post.hooks";
 import { getUserDetail } from "@/services/AuthServices";
@@ -26,11 +35,10 @@ import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/css/froala_style.min.css";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { Label } from "../ui/label";
-import { Switch } from "../ui/switch";
+import { Label } from "../../ui/label";
+import { Switch } from "../../ui/switch";
 import Tiptap from "./Tiptap";
 
 interface IFormData {
@@ -41,7 +49,6 @@ interface IFormData {
 }
 
 export function CreateAndEditPost({ isEditmode = false, editData = null }) {
-  const router = useRouter();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(
     editData?.image || null
@@ -79,6 +86,8 @@ export function CreateAndEditPost({ isEditmode = false, editData = null }) {
       description: editData?.description || "",
       ingredients: editData?.ingredients || [],
       cookingTime: editData?.cookingTime || 0,
+      servings: editData?.servings || 0,
+      difficulty: editData?.difficulty,
     },
     mode: "onChange",
   });
@@ -119,7 +128,9 @@ export function CreateAndEditPost({ isEditmode = false, editData = null }) {
       !values.description ||
       !imageFile ||
       !values.ingredients ||
-      !values.cookingTime
+      !values.cookingTime ||
+      !values.servings ||
+      !values.difficulty
     ) {
       alert("Please fill in all fields");
       return;
@@ -129,10 +140,12 @@ export function CreateAndEditPost({ isEditmode = false, editData = null }) {
     const postValues = {
       title: values.title,
       description: values.description,
-      user: (detailedUser as any)?._id,
+      author: (detailedUser as any)?._id,
       isPremium: isPremium,
       ingredients: values.ingredients,
       cookingTime: values.cookingTime,
+      servings: values.servings,
+      difficulty: values.difficulty,
       tags: tags,
     };
     formData.append("data", JSON.stringify(postValues));
@@ -159,10 +172,26 @@ export function CreateAndEditPost({ isEditmode = false, editData = null }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-orange-500 hover:bg-orange-600">
-          <PlusCircle className="mr-2" size={18} />
-          {isEditmode ? "Edit Recipe" : "New Recipe"}
-        </Button>
+        {isEditmode ? (
+          <Button className="bg-orange-500  hover:bg-orange-600">
+            <PlusCircle className="mr-2" size={18} />
+            Edit Recipe
+          </Button>
+        ) : (
+          <div className="cursor-pointer bg-white hover:bg-gray-100 transition-all duration-300 ease-in-out rounded-xl p-5 flex items-center justify-between gap-3 md:w-[80%] mx-auto">
+            <Image
+              src="https://github.com/shadcn.png"
+              className="rounded-full"
+              alt="user"
+              width="40"
+              height="40"
+            />
+            <Input
+              className="border py-6 cursor-pointer border-orange-500 rounded-full"
+              placeholder="New Recipe"
+            />
+          </div>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-auto md:max-w-[700px]">
@@ -240,15 +269,58 @@ export function CreateAndEditPost({ isEditmode = false, editData = null }) {
                   </FormItem>
                 )}
               />
+              <div className="flex items-center justify-start gap-6">
+                <FormField
+                  control={control}
+                  name="cookingTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cooking Time (minutes)</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="ex. 10" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="servings"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Serving (number of people)</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="ex. 1" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={control}
-                name="cookingTime"
+                name="difficulty"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Cooking Time (minutes)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="ex. 10" {...field} />
-                    </FormControl>
+                    <FormLabel>Difficulty</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Difficulty" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Difficulty</SelectLabel>
+                          <SelectItem value="Easy">Easy</SelectItem>
+                          <SelectItem value="Medium">Medium</SelectItem>
+                          <SelectItem value="Hard">Hard</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

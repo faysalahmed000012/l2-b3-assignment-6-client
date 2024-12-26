@@ -2,7 +2,7 @@
 
 import { type Editor } from "@tiptap/react";
 import { Bold, Italic, List } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
 type Props = {
   editor: Editor | null;

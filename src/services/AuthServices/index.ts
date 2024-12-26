@@ -59,6 +59,23 @@ export const getCurrentUser = async () => {
   return decodedToken;
 };
 
+export const savePost = async (
+  userId: string,
+  postId: string,
+  action: "add" | "remove"
+) => {
+  try {
+    const res = await axiosInstance.put("/user/savePost", {
+      userId,
+      postId,
+      action,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getNewAccessToken = async () => {
   try {
     const refreshToken = cookies().get("refreshToken")?.value;

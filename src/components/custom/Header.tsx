@@ -1,17 +1,15 @@
-// components/Header.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/userProvider";
 import { logout } from "@/services/AuthServices";
-import { LayoutDashboard, Menu, X } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { CreateAndEditPost } from "./CreateAndEditPost";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, setIsLoading: userLoading } = useUser();
+  const router = useRouter();
 
   const navItems = [
     { name: "About", href: "/about" },
@@ -35,9 +33,8 @@ export default function Header() {
             Crunch Social
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            {navItems.map((item) => (
+          <div className="flex items-center space-x-4">
+            {/* {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -46,14 +43,21 @@ export default function Header() {
                 {item.icon && <item.icon className="mr-1" size={18} />}
                 {item.name}
               </Link>
-            ))}
-            {user && (
+            ))} */}
+            {user ? (
               <Link
                 href={`/profile/${user.email}`}
                 className="flex items-center text-gray-600 hover:text-orange-600 transition-colors"
               >
                 Profile
               </Link>
+            ) : (
+              <Button
+                onClick={() => router.push("/auth/login")}
+                className="bg-orange-500 hover:bg-orange-600"
+              >
+                Login
+              </Button>
             )}
             {user && (
               <Button
@@ -64,45 +68,10 @@ export default function Header() {
               </Button>
             )}
           </div>
-          <div>
+          {/* <div>
             <CreateAndEditPost />
-          </div>
-
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </Button>
+          </div> */}
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="md:hidden mt-4 space-y-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="flex items-center py-2 text-gray-600 hover:text-orange-600 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.icon && <item.icon className="mr-2" size={18} />}
-                {item.name}
-              </Link>
-            ))}
-            {user && (
-              <Button
-                onClick={() => handleLogout()}
-                className="flex items-center text-gray-600 hover:text-orange-600 transition-colors bg-transparent hover:bg-gray-200"
-              >
-                Log out
-              </Button>
-            )}
-            <CreateAndEditPost />
-          </nav>
-        )}
       </div>
     </header>
   );

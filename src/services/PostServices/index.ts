@@ -90,6 +90,7 @@ export const Comment = async (
   userName: string,
   content: string,
   mode: "create" | "update" | "delete",
+  replyTo?: string,
   userImage?: string
 ) => {
   const body = {
@@ -99,6 +100,7 @@ export const Comment = async (
       userName: userName,
       userImage: userImage || "",
       content: content,
+      replyTo: replyTo || "",
     },
     mode: mode,
   };

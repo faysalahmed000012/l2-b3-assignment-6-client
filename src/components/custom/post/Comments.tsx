@@ -6,7 +6,7 @@ import { getUserDetail } from "@/services/AuthServices";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogClose,
@@ -15,11 +15,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Textarea } from "../ui/textarea";
+} from "../../ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
+import { Textarea } from "../../ui/textarea";
+import { IUserDetails } from "../dashboard/EditProfile";
 import TimeAgo from "./TimeAgo";
-import { IUserDetails } from "./dashboard/EditProfile";
 
 const Comments = ({ comments, postId }) => {
   const { user } = useUser();

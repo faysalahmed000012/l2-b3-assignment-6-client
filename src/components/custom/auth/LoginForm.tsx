@@ -34,13 +34,16 @@ const LoginForm = () => {
     },
   });
 
-  const {
-    mutate: handleUserLogin,
-    isPending,
-    isSuccess,
-    isError,
-    data: loginData,
-  } = useUserLogin();
+  const handleUserCredential = () => {
+    form.setValue("email", "faysal000015@gmail.com");
+    form.setValue("password", "faysalAhmed");
+  };
+  const handleAdminCredential = () => {
+    form.setValue("email", "darth0000@gmail.com");
+    form.setValue("password", "darthVader");
+  };
+
+  const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     handleUserLogin(data);
@@ -63,6 +66,20 @@ const LoginForm = () => {
       backButtonHref="/auth/register"
       backButtonLabel="Don't have an account? Register here."
     >
+      <div className="flex items-center justify-center gap-6 mb-6">
+        <Button
+          onClick={handleUserCredential}
+          className="bg-orange-500 hover:bg-orange-600"
+        >
+          User Credential
+        </Button>
+        <Button
+          onClick={handleAdminCredential}
+          className="bg-rose-500 hover:bg-rose-600"
+        >
+          Admin Credential
+        </Button>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
@@ -97,8 +114,11 @@ const LoginForm = () => {
               )}
             />
           </div>
-          <Button type="submit" className="w-full">
-            login
+          <Button
+            type="submit"
+            className="w-full bg-orange-500 hover:bg-orange-600"
+          >
+            Login
           </Button>
         </form>
       </Form>

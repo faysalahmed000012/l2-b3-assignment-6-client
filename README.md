@@ -1,6 +1,6 @@
 # Recipe Sharing Platform
 
-live link: https://l2-b3-assignment-6-client-git-main-faysalahmed000012s-projects.vercel.app/
+live link: https://l2-b3-assignment-6-client.vercel.app
 
 ## Description
 

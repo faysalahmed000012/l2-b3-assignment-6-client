@@ -1,6 +1,6 @@
+import RecipeCard from "@/components/custom/post/RecipeCard";
 import { AboutSection } from "@/components/custom/profile/AboutSection";
 import { UserInfo } from "@/components/custom/profile/UserInfo";
-import RecipeCard from "@/components/custom/RecipeCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getUserDetail } from "@/services/AuthServices";
 import { getPostByUser, userUpvotedPosts } from "@/services/PostServices";

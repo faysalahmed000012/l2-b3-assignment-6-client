@@ -1,17 +1,14 @@
-import Comments from "@/components/custom/Comments";
-import TimeAgo from "@/components/custom/TimeAgo";
-import Vote from "@/components/custom/Vote";
 import { getPostById } from "@/services/PostServices";
-import { Clock } from "lucide-react";
-import Image from "next/image";
+import RecipeDetailClient from "./RecipeDetailClient";
 
 const RecipeDetail = async ({ params }: { params: { id: string } }) => {
   const post = await getPostById(params.id);
-  function createMarkup(c) {
-    return { __html: c };
-  }
+
   return (
-    <div className="px-[20px] md:px-[80px] mt-[140px]">
+    <>
+      <div className="mt-16"></div>
+      <RecipeDetailClient post={post} />
+      {/* <div className="px-[20px] md:px-[80px] mt-[140px]">
       <div className="md:flex justify-center ">
         <div className="flex-1 flex items-center justify-center">
           <Image
@@ -66,7 +63,8 @@ const RecipeDetail = async ({ params }: { params: { id: string } }) => {
       <div id="comments">
         <Comments postId={post?._id} comments={post?.comments} />
       </div>
-    </div>
+    </div> */}
+    </>
   );
 };
 

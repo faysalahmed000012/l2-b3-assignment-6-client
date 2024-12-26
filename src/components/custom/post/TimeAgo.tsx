@@ -7,7 +7,7 @@ import {
 } from "@radix-ui/react-tooltip";
 import { Clock } from "lucide-react";
 import { useEffect, useState } from "react";
-import { formatTimeDifference } from "../../../utils";
+import { formatTimeDifference } from "../../../../utils";
 
 const TimeAgo = ({ time }: { time: Date }) => {
   const [timeAgo, setTimeAgo] = useState("");

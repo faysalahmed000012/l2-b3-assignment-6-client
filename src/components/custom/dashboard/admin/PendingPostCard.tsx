@@ -12,7 +12,7 @@ import { approvePost, deletePost, postAction } from "@/services/PostServices";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Image from "next/image";
 import Link from "next/link";
-import TimeAgo from "../../TimeAgo";
+import TimeAgo from "../../post/TimeAgo";
 
 export default function PendingPostCard({ post }: { post: any }) {
   const { user } = useUser();

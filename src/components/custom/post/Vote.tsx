@@ -4,21 +4,51 @@ import { getUserDetail } from "@/services/AuthServices";
 import { addRating, downVote, upVote } from "@/services/PostServices";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 
+import { IPost } from "@/types";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
+import { Button } from "../../ui/button";
+import { IUserDetails } from "../dashboard/EditProfile";
 import StarRating from "./StarRating";
 
-const Vote = ({ post }) => {
+const Vote = ({ post }: { post: IPost }) => {
   const { user } = useUser();
   const router = useRouter();
   const [like, setLike] = useState<number>(post?.upVotes || 0);
   const [dislike, setDislike] = useState<number>(post?.downVotes || 0);
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [detailedUser, setDetailedUser] = useState<IUserDetails | null>(null);
+  const [isLiked, setIsLiked] = useState<boolean>(
+    post?.votes &&
+      post?.votes.filter(
+        (vote) => vote.user === detailedUser?._id && vote.vote === 1
+      )
+      ? true
+      : false
+  );
+
   // let userRating;
   // if (user) {
   //   userRating = post.ratings.find((rating) => rating.user._id === user._id);
   // }
+  useEffect(() => {
+    let ignore = false;
+    const fetchUser = async () => {
+      try {
+        const response = await getUserDetail(user?.email as string);
+
+        if (!ignore) {
+          setDetailedUser(response as IUserDetails | null);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+    return () => {
+      ignore = true;
+    };
+  }, [user]);
+  // console.log(post?.title + ":" + post?.user, detailedUser?._id);
 
   const handleLike = async () => {
     if (!user) {
@@ -27,7 +57,10 @@ const Vote = ({ post }) => {
       const detailedUser = await getUserDetail(user?.email as string);
 
       if (detailedUser) {
-        const res = await upVote(post._id, detailedUser._id as string);
+        const res = await upVote(
+          post._id as string,
+          detailedUser._id as string
+        );
         console.log(res);
         setLike((prev) => prev + 1);
       } else {
@@ -42,7 +75,7 @@ const Vote = ({ post }) => {
     } else {
       const detailedUser = await getUserDetail(user?.email as string);
       if (detailedUser) {
-        downVote(post._id, detailedUser._id as string);
+        downVote(post?._id as string, detailedUser._id as string);
         setDislike((prev) => prev + 1);
       } else {
         alert("Failed to get User details from server, Try again");
@@ -57,14 +90,18 @@ const Vote = ({ post }) => {
       const detailedUser = await getUserDetail(user?.email as string);
 
       if (detailedUser) {
-        await addRating(post._id, detailedUser._id as string, newRating);
+        await addRating(
+          post._id as string,
+          detailedUser._id as string,
+          newRating
+        );
       } else {
         alert("Failed to get User details from server, Try again");
       }
     }
   };
   let averageRating;
-  if (post?.ratings?.length > 0) {
+  if (post?.ratings?.length && post?.ratings?.length > 0) {
     const totalRating = post.ratings.reduce(
       (acc, curr) => acc + curr.rating,
       0
@@ -76,7 +113,9 @@ const Vote = ({ post }) => {
     <div className="flex justify-between items-center ">
       <div className="flex items-center  border border-gray-500 rounded-full">
         <Button
-          className=" hover:bg-orange-100 rounded-l-full pr-4"
+          className={` ${
+            isLiked && "bg-orange-400"
+          } hover:bg-orange-100 rounded-l-full pr-4`}
           variant="ghost"
           size="sm"
           onClick={handleLike}
