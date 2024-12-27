@@ -4,6 +4,7 @@ import {
   postAction,
   updatePost,
 } from "@/services/PostServices";
+import { ICommentPayload } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -34,34 +35,10 @@ export const useUpdatePost = () => {
 };
 
 export const useComment = () => {
-  return useMutation<
-    any,
-    Error,
-    {
-      postId: string;
-      userId: string;
-      userName: string;
-      userImage?: string;
-      comment: string;
-      mode: "create" | "update" | "delete";
-    }
-  >({
+  return useMutation<any, Error, ICommentPayload>({
     mutationKey: ["ADD_COMMENT"],
-    mutationFn: async ({
-      postId,
-      userId,
-      userName,
-      comment,
-      mode,
-      userImage = "",
-    }: {
-      postId: string;
-      userId: string;
-      userName: string;
-      comment: string;
-      mode: "create" | "update" | "delete";
-      userImage?: string;
-    }) => await Comment(postId, userId, userName, comment, mode, userImage),
+    mutationFn: async (commentPayload: ICommentPayload) =>
+      await Comment(commentPayload),
     onSuccess: () => {
       toast.success("Comment Action Taken Successfully");
     },

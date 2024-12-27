@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { useUser } from "@/context/userProvider";
+import { useComment } from "@/hooks/post.hooks";
+import { getUserDetail } from "@/services/AuthServices";
+import { addRating, downVote, upVote } from "@/services/PostServices";
 import { IPost } from "@/types";
 import {
   BookmarkPlus,
@@ -20,35 +24,109 @@ import {
   Utensils,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const RecipeDetailClient = ({ post }: { post: IPost }) => {
-  const [userRating, setUserRating] = useState(0);
   const [comment, setComment] = useState("");
+  const { user } = useUser();
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.likes?.length || 0);
   const [replyTo, setReplyTo] = useState<string | null>(null);
+  const { mutate: AddComment } = useComment();
   function createMarkup(c) {
     return { __html: c };
   }
+  const userDefaultRating = (
+    post.ratings &&
+    user &&
+    post.ratings.find((rating) => rating.user === user?._id)
+  )?.rating;
+
+  const [userRating, setUserRating] = useState(0);
+
+  useEffect(() => {
+    if (userDefaultRating) setUserRating(userDefaultRating);
+    const isLiked = post.likes?.find((like) => like.user === user?._id);
+    if (post.likes && isLiked) {
+      setIsLiked(true);
+    }
+  }, [userDefaultRating, post.likes, user?._id]);
 
   const handleRating = (rating: number) => {
     setUserRating(rating);
-    // Here you would typically send this rating to your backend
+    addRating(post._id as string, user?._id as string, rating);
+    toast.success("Your Rating Has Been Submitted");
   };
 
-  const handleCommentSubmit = () => {
+  const handleLike = () => {
+    if (isLiked) {
+      downVote(post._id as string, user?._id as string);
+    } else {
+      upVote(post._id as string, user?._id as string);
+    }
+
+    setIsLiked(!isLiked);
+    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
     // Here you would typically send the comment to your backend
     console.log("Submitting comment:", comment);
+
+    const detailedUser = await getUserDetail(user?.email as string);
+    if (detailedUser) {
+      //console.log(e.target.value);
+      AddComment({
+        postId: post._id as string,
+        userId: detailedUser._id as string,
+        userName: detailedUser.name as string,
+        userImage: detailedUser.profilePicture,
+        mode: "create",
+        comment: comment,
+      });
+    } else {
+      alert("Please login to comment");
+    }
     setComment("");
   };
 
   const handleReply = (commentId: string) => {
-    setReplyTo(commentId);
+    if (replyTo) {
+      setReplyTo(null);
+    } else {
+      setReplyTo(commentId);
+    }
+  };
+
+  const handleSubmitReply = async (e, commentId: string) => {
+    e.preventDefault();
+
+    const detailedUser = await getUserDetail(user?.email as string);
+    if (detailedUser) {
+      //console.log(e.target.value);
+      AddComment({
+        postId: post._id as string,
+        userId: detailedUser._id as string,
+        userName: detailedUser.name as string,
+        userImage: detailedUser.profilePicture,
+        mode: "create",
+        comment: e.target.replyComment.value,
+        replyTo: commentId,
+      });
+    } else {
+      alert("Please login to comment");
+    }
+    setReplyTo(null);
   };
 
   const averageRating =
     post?.ratings &&
     post.ratings?.reduce((acc, val) => acc + val.rating, 0) /
       post?.ratings?.length;
+
+  const postComments = post.comments?.filter((c) => c.replyTo === "");
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -82,7 +160,7 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
           <div className="flex flex-wrap gap-2 mb-6">
             {
               // @ts-ignore
-              post.tags.map((tag) => (
+              post?.tags?.map((tag) => (
                 <Badge
                   key={tag}
                   variant="secondary"
@@ -100,26 +178,28 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
           <div className="flex flex-wrap gap-6 mb-8">
             <div className="flex items-center">
               <Clock className="h-5 w-5 text-orange-500 mr-2" />
-              <span>{post.cookingTime}</span>
+              <span>{post?.cookingTime}</span>
             </div>
             <div className="flex items-center">
               <Cookie className="h-5 w-5 text-orange-500 mr-2" />
-              <span>{"Hard"}</span>
+              <span>{post?.difficulty}</span>
             </div>
             <div className="flex items-center">
               <Star className="h-5 w-5 fill-yellow-400 text-yellow-400 mr-2" />
-              <span>{averageRating?.toFixed(1) || 0}</span>
+              <span>{averageRating ? averageRating?.toFixed(1) : 0}</span>
             </div>
             <div className="flex items-center">
               <Utensils className="h-5 w-5 text-orange-500 mr-2" />
-              <span>{"3"} servings</span>
+              <span>{post?.servings} servings</span>
             </div>
           </div>
           <Separator className="my-8" />
           <h2 className="text-2xl font-semibold mb-4">Ingredients</h2>
           <ul className="list-disc pl-5 mb-8 space-y-2">
             {post.ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient.name}</li>
+              <li key={index}>
+                {ingredient.name} - {ingredient.quantity}
+              </li>
             ))}
           </ul>
           <h2 className="text-2xl font-semibold mb-4">Description</h2>
@@ -147,69 +227,97 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
               />
             ))}
           </div>
-          <h2 className="text-2xl font-semibold mb-4">Comments</h2>
+          <h2 id="comments" className="text-2xl font-semibold mb-4">
+            Comments
+          </h2>
           <div className="space-y-6">
-            {post.comments?.map((comment) => (
-              <div key={comment._id} className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-start space-x-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage
-                      src={comment.userImage}
-                      alt={comment.userName}
-                    />
-                    <AvatarFallback>{comment.userName[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold">{comment.userName}</h3>
-                      <span className="text-sm text-gray-500">
-                        <TimeAgo time={new Date(comment.createdAt)} />
-                      </span>
-                    </div>
-                    <p className="mt-1 text-gray-700">{comment.content}</p>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="mt-2 text-orange-500"
-                      onClick={() => handleReply(comment._id as string)}
-                    >
-                      Reply
-                    </Button>
-                    {/* {comment.replies.map((reply) => (
-                      <div
-                        key={reply.id}
-                        className="mt-4 ml-6 bg-white rounded-lg p-3"
-                      >
-                        <div className="flex items-start space-x-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage
-                              src={reply.user.image}
-                              alt={reply.user.name}
-                            />
-                            <AvatarFallback>
-                              {reply.user.name[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="flex items-center justify-between">
-                              <h4 className="font-semibold">
-                                {reply.user.name}
-                              </h4>
-                              <span className="text-xs text-gray-500">
-                                {reply.timestamp}
-                              </span>
-                            </div>
-                            <p className="mt-1 text-sm text-gray-700">
-                              {reply.content}
-                            </p>
-                          </div>
-                        </div>
+            {postComments &&
+              postComments.map((comment) => (
+                <div key={comment._id} className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage
+                        src={comment.userImage}
+                        alt={comment.userName}
+                      />
+                      <AvatarFallback>{comment.userName[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold">{comment.userName}</h3>
+                        <span className="text-sm text-gray-500">
+                          <TimeAgo time={new Date(comment.createdAt)} />
+                        </span>
                       </div>
-                    ))} */}
+                      <p className="mt-1 text-gray-700">{comment.content}</p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-2 text-orange-500"
+                        onClick={() => handleReply(comment._id as string)}
+                      >
+                        Reply
+                      </Button>
+                      {replyTo && replyTo === comment._id && (
+                        <div className="mt-3">
+                          <form
+                            onSubmit={(e) =>
+                              handleSubmitReply(e, comment._id as string)
+                            }
+                            action=""
+                          >
+                            <Textarea
+                              placeholder="Write a reply..."
+                              name="replyComment"
+                              className="mb-2"
+                            />
+                            <Button className="bg-orange-500 hover:bg-orange-600">
+                              <Send className="mr-2 h-4 w-4" />
+                              Post Reply
+                            </Button>
+                          </form>
+                        </div>
+                      )}
+                      {post.comments &&
+                        post.comments
+                          .filter((c) => c.replyTo === comment._id)
+                          .map((reply) => (
+                            <div
+                              key={reply._id}
+                              className="mt-4 ml-6 bg-white rounded-lg p-3"
+                            >
+                              <div className="flex items-start space-x-3">
+                                <Avatar className="h-8 w-8">
+                                  <AvatarImage
+                                    src={reply.userImage}
+                                    alt={reply.userName}
+                                  />
+                                  <AvatarFallback>
+                                    {reply.userName[0]}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className="flex items-center justify-between gap-3">
+                                    <h4 className="font-semibold">
+                                      {reply.userName}
+                                    </h4>
+                                    <span className="text-xs text-gray-500">
+                                      <TimeAgo
+                                        time={new Date(reply.createdAt)}
+                                      />
+                                    </span>
+                                  </div>
+                                  <p className="mt-1 text-sm text-gray-700">
+                                    {reply.content}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
           <div className="mt-6">
             <Textarea
@@ -219,11 +327,11 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
               className="mb-2"
             />
             <Button
-              onClick={handleCommentSubmit}
+              onClick={(e) => handleCommentSubmit(e)}
               className="bg-orange-500 hover:bg-orange-600"
             >
               <Send className="mr-2 h-4 w-4" />
-              {replyTo ? "Post Reply" : "Post Comment"}
+              Post Comment
             </Button>
           </div>
         </div>
@@ -232,16 +340,33 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
             <CardContent className="p-6">
               <h3 className="text-xl font-semibold mb-4">Recipe Actions</h3>
               <div className="space-y-4">
-                <Button className="w-full">
-                  <Heart className="mr-2 h-4 w-4" /> Like
+                <Button
+                  onClick={handleLike}
+                  className={`w-full ${isLiked && "bg-orange-500"}`}
+                >
+                  {likeCount}
+                  <Heart className={`mr-2 h-4 w-4  `} />{" "}
+                  {isLiked ? "Liked" : "Like"}
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button
+                  onClick={() => toast("Coming Soon")}
+                  variant="outline"
+                  className="w-full"
+                >
                   <BookmarkPlus className="mr-2 h-4 w-4" /> Save Recipe
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button
+                  onClick={() => toast("Coming Soon")}
+                  variant="outline"
+                  className="w-full"
+                >
                   <Share2 className="mr-2 h-4 w-4" /> Share
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button
+                  onClick={() => toast("Coming Soon")}
+                  variant="outline"
+                  className="w-full"
+                >
                   <Printer className="mr-2 h-4 w-4" /> Print Recipe
                 </Button>
               </div>
@@ -257,7 +382,7 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span>
                   <ChefHat className="inline-block mr-1 h-4 w-4" />
-                  Darth Baker
+                  {post?.author.name}
                 </span>
                 <span>
                   {" "}

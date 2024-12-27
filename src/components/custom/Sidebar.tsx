@@ -11,16 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DashboardIcon } from "@radix-ui/react-icons";
 import {
-  ChevronsUpDown,
-  Clock,
-  Flame,
+  Filter,
   Info,
-  Leaf,
   LogIn,
   Mail,
   Menu,
@@ -31,14 +26,26 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 
-interface SidebarProps {
-  className?: string;
-}
-
-export default function Sidebar({ className }: SidebarProps) {
+export default function Sidebar({ setSearchTerm, setTag, tag }) {
   const [isOpen, setIsOpen] = useState(false);
   const [cookingTime, setCookingTime] = useState([30]);
   const [showVegan, setShowVegan] = useState(false);
+  const categories = [
+    "All",
+    "breakfast",
+    "lunch",
+    "dinner",
+    "dessert",
+    "snack",
+    "vegan",
+    "vegetarian",
+    "gluten-free",
+    "low-carb",
+  ];
+
+  const handleCategoryChange = (value) => {
+    setTag(value);
+  };
 
   const sidebarContent = (
     <div className="space-y-6">
@@ -50,6 +57,7 @@ export default function Sidebar({ className }: SidebarProps) {
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-orange-500 h-4 w-4" />
           <Input
             type="text"
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search recipes..."
             className="pl-8 bg-white border-orange-200 focus:border-orange-500 focus:ring-orange-500"
           />
@@ -70,19 +78,24 @@ export default function Sidebar({ className }: SidebarProps) {
               <Utensils className="h-4 w-4 text-orange-500" />
               Category
             </Label>
-            <Select>
-              <SelectTrigger id="category" className="w-full mt-1">
-                <SelectValue placeholder="Select category" />
+            <Select onValueChange={handleCategoryChange} value={tag}>
+              <SelectTrigger className="w-full mt-1">
+                <Filter className="mr-2" size={18} />
+                <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="breakfast">Breakfast</SelectItem>
-                <SelectItem value="lunch">Lunch</SelectItem>
-                <SelectItem value="dinner">Dinner</SelectItem>
-                <SelectItem value="dessert">Dessert</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
-          <div>
+          {
+            // coming soon
+          }
+          {/* <div>
             <Label
               htmlFor="difficulty"
               className="flex items-center gap-2 text-orange-700"
@@ -132,10 +145,11 @@ export default function Sidebar({ className }: SidebarProps) {
               <Leaf className="h-4 w-4 text-orange-500" />
               Show only vegan recipes
             </Label>
-          </div>
+          </div> */}
         </TabsContent>
         <TabsContent value="sort" className="space-y-4 mt-4">
-          <div className="space-y-2">
+          <p>Coming soon</p>
+          {/* <div className="space-y-2">
             <Button variant="outline" className="w-full justify-start">
               <ChevronsUpDown className="mr-2 h-4 w-4" />
               Most Popular
@@ -152,7 +166,7 @@ export default function Sidebar({ className }: SidebarProps) {
               <ChevronsUpDown className="mr-2 h-4 w-4" />
               Difficulty Level
             </Button>
-          </div>
+          </div> */}
         </TabsContent>
       </Tabs>
 
@@ -208,7 +222,11 @@ export default function Sidebar({ className }: SidebarProps) {
 
   return (
     <>
-      <div className={`hidden lg:block ${className}`}>{sidebarContent}</div>
+      <div
+        className={`hidden lg:block lg:sticky lg:top-16 lg:left-0 w-full lg:w-1/4 xl:w-1/5`}
+      >
+        {sidebarContent}
+      </div>
       <div className="lg:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>

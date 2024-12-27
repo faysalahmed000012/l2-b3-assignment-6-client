@@ -6,6 +6,15 @@ export interface IComment {
   userImage: string;
   content: string;
 }
+export interface ICommentPayload {
+  postId: string;
+  userId: string;
+  userName: string;
+  userImage?: string;
+  replyTo?: string;
+  comment: string;
+  mode: "create" | "update" | "delete";
+}
 
 export interface IUser {
   _id?: string;

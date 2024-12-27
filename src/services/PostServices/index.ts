@@ -1,6 +1,7 @@
 "use server";
 
 import axiosInstance from "@/config/axiosInstance";
+import { ICommentPayload } from "@/types";
 import { revalidatePath } from "next/cache";
 
 export interface IQuery {
@@ -84,22 +85,17 @@ export const postAction = async (data: any) => {
   }
 };
 
-export const Comment = async (
-  postId: string,
-  userId: string,
-  userName: string,
-  content: string,
-  mode: "create" | "update" | "delete",
-  replyTo?: string,
-  userImage?: string
-) => {
+export const Comment = async (payload: ICommentPayload) => {
+  const { postId, userId, userName, comment, mode, replyTo, userImage } =
+    payload;
+
   const body = {
     postId: postId,
     comment: {
       userId: userId,
       userName: userName,
       userImage: userImage || "",
-      content: content,
+      content: comment,
       replyTo: replyTo || "",
     },
     mode: mode,
@@ -137,6 +133,7 @@ export const downVote = async (postId: string, userId: string) => {
       userId,
       postId,
     };
+
     const res = await axiosInstance.put("/posts/action/downVote", body, {
       withCredentials: true,
     });
@@ -184,6 +181,7 @@ export const addRating = async (
   rating: number
 ) => {
   try {
+    console.log(userId);
     const result = await axiosInstance.put(
       "/posts/action/rating",
       { postId, userId, rating },

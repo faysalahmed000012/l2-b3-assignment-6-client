@@ -38,15 +38,15 @@ export default function PendingPostCard({ post }: { post: any }) {
             <Avatar>
               <AvatarImage
                 className="w-10 h-10 rounded-full"
-                src={post?.user?.profilePicture}
+                src={post?.author?.profilePicture}
               />
-              <AvatarFallback>{post?.user?.name}</AvatarFallback>
+              <AvatarFallback>{post?.author?.name}</AvatarFallback>
             </Avatar>
             <div>
               <Link href={`/recipe/5`}>
                 <CardTitle>{post?.title}</CardTitle>
               </Link>
-              <p className="text-sm text-gray-500">by {post?.user?.name}</p>
+              <p className="text-sm text-gray-500">by {post?.author?.name}</p>
             </div>
           </div>
           <div className="ms-12 md:ms-0">

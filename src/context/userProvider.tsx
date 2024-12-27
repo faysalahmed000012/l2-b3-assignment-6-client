@@ -12,6 +12,8 @@ import {
 const UserContext = createContext<IUserProviderValues | undefined>(undefined);
 
 interface IUser {
+  _id: string;
+  name: string;
   email: string;
   role: "admin" | "user";
   iat: any;

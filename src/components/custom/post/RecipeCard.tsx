@@ -49,7 +49,7 @@ export default function RecipeCard({ post }: { post: IPost }) {
   const [showComments, setShowComments] = useState(false);
   const { user } = useUser();
   const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(post.likes?.length || 0);
   const [isSaved, setIsSaved] = useState(false);
   const [showAuthor, setShowAuthor] = useState(false);
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -253,9 +253,7 @@ export default function RecipeCard({ post }: { post: IPost }) {
                         isLiked ? "fill-orange-500" : "fill-none"
                       }`}
                     />
-                    <span className="text-sm font-medium">
-                      {likes?.length || 0}
-                    </span>
+                    <span className="text-sm font-medium">{likeCount}</span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>{isLiked ? "Unlike" : "Like"}</TooltipContent>
@@ -264,6 +262,7 @@ export default function RecipeCard({ post }: { post: IPost }) {
                 <TooltipTrigger>
                   <Button
                     variant="ghost"
+                    onClick={() => router.push(`/recipe/${_id}#comments`)}
                     size="sm"
                     className="hover:text-orange-500 flex items-center gap-1 text-gray-500 transition-colors"
                   >
