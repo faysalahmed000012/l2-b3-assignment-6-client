@@ -3,31 +3,91 @@ import Image from "next/image";
 
 const About = () => {
   return (
-    <div className="mx-[20px] mt-[150px] min-h-[70vh]">
-      <div className="mx-auto md:max-w-[60%] lg:max-w-[50%]">
-        <h1 className="text-center text-3xl md:text-5xl">Crunch Social</h1>
-        <hr className="my-3 h-0.5 border-t-0 bg-neutral-200 dark:bg-white/10" />
-        <p className="mt-6  text-gray-600">
-          Crunch Social is a{" "}
-          <span className="font-bold">Recipe Sharing Community</span>, a
-          full-stack web application aimed at bringing together cooking
-          enthusiasts, providing a platform where users can share, discover, and
-          organize recipes. Targeting home cooks, culinary students, and anyone
-          passionate about cooking, the platform allows users to post favorite
-          recipes, contribute interactive ingredient checklists, and share
-          cooking time estimates. The community fosters sharing culinary
-          knowledge, supporting social engagement.
-        </p>
-        <h1 className="mt-16 text-center text-3xl md:text-5xl">Our Mission</h1>
-        <hr className="my-3 h-0.5 border-t-0 bg-neutral-200 dark:bg-white/10" />
-        <p className="mt-6  text-gray-600">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos
-          quia expedita rerum, nihil nisi placeat! Nemo magni ab sapiente odit
-          amet, exercitationem at animi inventore saepe labore laboriosam
-          quaerat omnis quas eligendi, tenetur sunt fuga beatae a laudantium
-          asperiores consequuntur facere! Ut, quod voluptatem. Est numquam
-          laboriosam ipsam perspiciatis maiores!
-        </p>
+    <div className="container mx-auto mt-[120px]">
+      <div className="container mx-auto px-4 py-12 ">
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-24">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+              About Us
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              We believe in the power of shared culinary experiences. Crunch
+              Social is where passionate home cooks, culinary students, and food
+              enthusiasts come together to create a vibrant recipe-sharing
+              community.
+            </p>
+          </div>
+          <div className="relative h-[300px] lg:h-[400px]">
+            <Image
+              src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2070&auto=format&fit=crop"
+              width={300}
+              height={400}
+              alt="People cooking together"
+              className="rounded-lg object-cover w-full h-full"
+            />
+          </div>
+        </div>
+
+        {/* Mission Section */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-24">
+          <div className="relative h-[300px] lg:h-[400px] order-last lg:order-first">
+            <Image
+              src="https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?q=80&w=2070&auto=format&fit=crop"
+              width={300}
+              height={400}
+              alt="Recipe sharing and cooking"
+              className="rounded-lg object-cover w-full h-full"
+            />
+          </div>
+          <div>
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4">
+              Our Mission: Building a Global Culinary Community
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              At Crunch Social, we're dedicated to creating a space where
+              culinary knowledge flows freely. Our platform enables users to
+              share their favorite recipes, discover new dishes, and connect
+              with fellow cooking enthusiasts. From interactive ingredient
+              checklists to cooking time estimates, we're making recipe sharing
+              more engaging and accessible than ever.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-semibold mb-4">
+              Our Story
+            </h2>
+            <p className="text-muted-foreground mb-4">
+              Crunch Social was born from a simple observation: cooking is
+              better when shared. We noticed that while people love to cook,
+              they often struggle to find reliable recipes and connect with
+              others who share their passion.
+            </p>
+            <p className="text-muted-foreground mb-4">
+              Our platform emerged as a solution to bring together cooking
+              enthusiasts in one vibrant community. We created a space where
+              home cooks, culinary students, and food lovers can share their
+              culinary knowledge and experiences.
+            </p>
+            <p className="text-muted-foreground">
+              Today, Crunch Social continues to grow as a hub for recipe
+              sharing, culinary discovery, and community engagement. We're proud
+              to foster a space where every recipe tells a story and every
+              member contributes to our collective cooking journey.
+            </p>
+          </div>
+          <div className="relative h-[300px] lg:h-[400px]">
+            <Image
+              src="https://images.unsplash.com/photo-1605522561233-768ad7a8fabf?q=80&w=2070&auto=format&fit=crop"
+              width={300}
+              height={400}
+              alt="Cooking community"
+              className="rounded-lg object-cover w-full h-full"
+            />
+          </div>
+        </div>
       </div>
       <div className="mt-16">
         <h1 className="text-center text-3xl md:text-5xl">Meet Our Team</h1>
@@ -36,14 +96,13 @@ const About = () => {
           Meet our team member who are working hard to make this project a
           success.
         </p>
-        <div className="mt-10 md:max-w-[1500px] mb-10 grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto">
+        <div className="mt-10 container mx-auto mb-10 grid grid-cols-1 md:grid-cols-3 gap-6">
           {team.map((member) => {
             return (
               <div
                 key={member.name}
                 className="mt-6 md:mt-0 max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden"
               >
-                {/* Image */}
                 <Image
                   width={160}
                   height={192}
@@ -52,7 +111,6 @@ const About = () => {
                   alt={member.name}
                 />
 
-                {/* Info */}
                 <div className="p-4">
                   <h2 className="text-xl font-bold text-gray-900">
                     {member.name}

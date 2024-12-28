@@ -15,6 +15,7 @@ interface IUser {
   _id: string;
   name: string;
   email: string;
+  profilePicture: string | null;
   role: "admin" | "user";
   iat: any;
   exp: any;

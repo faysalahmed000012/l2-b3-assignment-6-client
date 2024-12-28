@@ -24,12 +24,14 @@ import {
   Utensils,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const RecipeDetailClient = ({ post }: { post: IPost }) => {
   const [comment, setComment] = useState("");
   const { user } = useUser();
+  const router = useRouter();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes?.length || 0);
   const [replyTo, setReplyTo] = useState<string | null>(null);
@@ -54,12 +56,20 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
   }, [userDefaultRating, post.likes, user?._id]);
 
   const handleRating = (rating: number) => {
+    if (!user) {
+      toast.error("Please Login to Rete");
+      return router.push("/auth/login");
+    }
     setUserRating(rating);
     addRating(post._id as string, user?._id as string, rating);
     toast.success("Your Rating Has Been Submitted");
   };
 
   const handleLike = () => {
+    if (!user) {
+      toast.error("Please Login to Like");
+      return router.push("/auth/login");
+    }
     if (isLiked) {
       downVote(post._id as string, user?._id as string);
     } else {
@@ -72,6 +82,10 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+    if (!user) {
+      toast.error("Please Login to Comment");
+      return router.push("/auth/login");
+    }
     // Here you would typically send the comment to your backend
     console.log("Submitting comment:", comment);
 
@@ -102,6 +116,10 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
 
   const handleSubmitReply = async (e, commentId: string) => {
     e.preventDefault();
+    if (!user) {
+      toast.error("Please Login to Reply");
+      return router.push("/auth/login");
+    }
 
     const detailedUser = await getUserDetail(user?.email as string);
     if (detailedUser) {

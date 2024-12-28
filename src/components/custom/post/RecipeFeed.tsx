@@ -14,7 +14,7 @@ const RecipeFeed = ({ posts, fetchData, hasMore }) => {
       <div className="h-[1px] bg-gray-400 md:w-[80%] mx-auto mb-3"></div>
       <div className="space-y-6">
         <InfiniteScroll
-          dataLength={posts.length}
+          dataLength={posts?.length}
           next={fetchData}
           hasMore={hasMore}
           loader={<p className="text-center my-3">Loading...</p>}
@@ -23,7 +23,7 @@ const RecipeFeed = ({ posts, fetchData, hasMore }) => {
           }
         >
           <div className="grid grid-cols-1 gap-6">
-            {posts.map((recipe) => (
+            {posts?.map((recipe) => (
               <RecipeCard key={recipe._id} post={recipe} />
             ))}
           </div>

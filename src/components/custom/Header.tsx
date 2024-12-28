@@ -3,9 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/userProvider";
 import { logout } from "@/services/AuthServices";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, LogOut, User2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export default function Header() {
   const { user, setIsLoading: userLoading } = useUser();
@@ -45,12 +52,33 @@ export default function Header() {
               </Link>
             ))} */}
             {user ? (
-              <Link
-                href={`/profile/${user.email}`}
-                className="flex items-center text-gray-600 hover:text-orange-600 transition-colors"
-              >
-                Profile
-              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="cursor-pointer">
+                    <AvatarImage
+                      src={user.profilePicture || ""}
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>{user.name[0]}</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[120px]">
+                  <DropdownMenuItem
+                    onClick={() => router.push(`/profile/${user.email}`)}
+                    className="cursor-pointer hover:bg-gray-100"
+                  >
+                    <User2 className="mr-2 h-4 w-4 " />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleLogout()}
+                    className="text-destructive cursor-pointer focus:text-destructive hover:bg-red-500 hover:text-white mt-2"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Button
                 onClick={() => router.push("/auth/login")}
@@ -59,14 +87,14 @@ export default function Header() {
                 Login
               </Button>
             )}
-            {user && (
+            {/* {user && (
               <Button
-                onClick={() => handleLogout()}
+               
                 className="flex items-center text-gray-600 hover:text-orange-600 transition-colors bg-transparent hover:bg-gray-200"
               >
                 Log out
               </Button>
-            )}
+            )} */}
           </div>
           {/* <div>
             <CreateAndEditPost />

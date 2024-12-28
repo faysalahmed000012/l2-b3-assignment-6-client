@@ -12,7 +12,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
     <QueryClientProvider client={queryClient}>
       <UserProvider>
         {children}
-        <Toaster />
+        <Toaster position="top-center" richColors />
       </UserProvider>
     </QueryClientProvider>
   );
