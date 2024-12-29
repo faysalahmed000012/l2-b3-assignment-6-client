@@ -5,7 +5,7 @@ import { useUser } from "@/context/userProvider";
 import { logout } from "@/services/AuthServices";
 import { LayoutDashboard, LogOut, User2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -17,6 +17,11 @@ import {
 export default function Header() {
   const { user, setIsLoading: userLoading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
+  const showHeader = !pathname.startsWith("/dashboard");
+  if (!showHeader) {
+    return null;
+  }
 
   const navItems = [
     { name: "About", href: "/about" },
@@ -30,6 +35,7 @@ export default function Header() {
   const handleLogout = () => {
     logout();
     userLoading(true);
+    router.push("/auth/login");
   };
 
   return (

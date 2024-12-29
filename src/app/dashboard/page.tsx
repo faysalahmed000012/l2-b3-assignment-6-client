@@ -7,7 +7,7 @@ import { useUser } from "@/context/userProvider";
 const DashboardPage = () => {
   const { user } = useUser();
   return (
-    <div className="ms-10 mt-[70px]">
+    <div className="md:ms-10 mt-[70px]">
       <div className="mt-10">
         {user?.role == "admin" ? (
           <div>

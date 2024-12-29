@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const currentUser = await getCurrentUser();
   const path = request.nextUrl.pathname;
 
-  if (!currentUser && path !== "/auth/login") {
+  if (!currentUser && path !== "/auth/login" && path !== "/auth/register") {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 

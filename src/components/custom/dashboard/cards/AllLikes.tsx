@@ -19,7 +19,6 @@ const AllLikes = () => {
     queryFn: () => getAllLikes(detailedUser?._id as string),
     enabled: !!detailedUser?._id,
   });
-  console.log(likes);
   return (
     <div>
       <Card className="bg-white">

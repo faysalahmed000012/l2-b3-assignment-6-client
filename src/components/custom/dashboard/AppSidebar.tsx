@@ -1,4 +1,13 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import {
+  CreditCard,
+  FileText,
+  LayoutDashboard,
+  Receipt,
+  Settings,
+  UserCircle,
+  UserCog,
+  Users,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -14,46 +23,74 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Home",
-    url: "#",
-    icon: Home,
+    title: "Overview",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+    isActive: true,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Profile",
+    url: "/dashboard/edit-profile",
+    icon: UserCircle,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Posts",
+    url: "/dashboard/manage-posts",
+    icon: FileText,
   },
   {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "Followers",
+    url: "/dashboard/connections/followers",
+    icon: Users,
+  },
+  {
+    title: "Following",
+    url: "/dashboard/connections/following",
+    icon: Users,
+  },
+
+  {
+    title: "User Management",
+    url: "/dashboard/manage-users",
+    icon: UserCog,
+  },
+  {
+    title: "Subscription",
+    url: "/dashboard/subscription",
+    icon: CreditCard,
+  },
+  {
+    title: "Transactions",
+    url: "/dashboard/transactions",
+    icon: Receipt,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/dashboard/settings",
     icon: Settings,
   },
 ];
 
 export default function AppSidebar() {
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar className="mt-[65px] ">
+      <SidebarContent className="">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-2xl">Dashboard</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-2xl mb-3">
+            Dashboard
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-2">
               {items.map((item) => (
-                <SidebarMenuItem className="" key={item.title}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    className="hover:bg-slate-100 cursor-pointer "
+                    isActive={item.isActive}
+                  >
                     <a href={item.url}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span className="">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

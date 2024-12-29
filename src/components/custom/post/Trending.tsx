@@ -11,7 +11,7 @@ import { useState } from "react";
 export default function TrendingSection({ posts }: { posts: IPost[] }) {
   const [activeTab, setActiveTab] = useState<"recipes" | "chefs">("recipes");
   const router = useRouter();
-  const featuredRecipe = posts[0];
+  const featuredRecipe = posts && posts[0];
 
   // const trendingRecipes = [
   //   {

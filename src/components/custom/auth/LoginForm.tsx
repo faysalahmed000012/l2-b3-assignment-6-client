@@ -17,13 +17,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { FaTruckLoading } from "react-icons/fa";
 import { z } from "zod";
+import CustomLoading from "../post/CustomLoading";
 import CardWrapper from "./card-wrapper";
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { setIsLoading: userLoading } = useUser();
+  const { setIsLoading: userLoading, isLoading } = useUser();
 
   const redirect = searchParams.get("redirect");
   const form = useForm({
@@ -43,7 +45,12 @@ const LoginForm = () => {
     form.setValue("password", "darthVader");
   };
 
-  const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
+  const {
+    mutate: handleUserLogin,
+    data,
+    isPending,
+    isSuccess,
+  } = useUserLogin();
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     handleUserLogin(data);
@@ -54,10 +61,18 @@ const LoginForm = () => {
       if (redirect) {
         router.push(redirect);
       } else {
-        router.push("/");
+        if (data?.data?.role === "admin") {
+          router.push("/dashboard");
+        } else {
+          router.push("/");
+        }
       }
     }
-  }, [isPending, isSuccess, redirect, router]);
+  }, [isPending, isSuccess, redirect, router, data]);
+
+  if (isPending || isLoading) {
+    return <CustomLoading />;
+  }
 
   return (
     <CardWrapper
@@ -115,9 +130,11 @@ const LoginForm = () => {
             />
           </div>
           <Button
+            disabled={isPending}
             type="submit"
             className="w-full bg-orange-500 hover:bg-orange-600"
           >
+            {isPending && <FaTruckLoading />}
             Login
           </Button>
         </form>

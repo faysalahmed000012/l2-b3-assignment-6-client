@@ -1,5 +1,10 @@
-import { loginUser, registerUser, updateUser } from "@/services/AuthServices";
-import { useMutation } from "@tanstack/react-query";
+import {
+  getAllUsers,
+  loginUser,
+  registerUser,
+  updateUser,
+} from "@/services/AuthServices";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useUserRegistration = () => {
@@ -32,12 +37,19 @@ export const useUserLogin = () => {
   return useMutation<any, Error>({
     mutationKey: ["USER_LOGIN"],
     mutationFn: async (userData) => await loginUser(userData),
-    onSuccess: () => {
-      toast.success("User login successful.");
+    onSuccess: (data) => {
+      toast.success("Login Successful!");
+      return data;
     },
     onError: (error) => {
-      // console.log(error);
       toast.error(error.message);
     },
+  });
+};
+
+export const useGetAllUsers = () => {
+  return useQuery({
+    queryKey: ["GET_USERS"],
+    queryFn: async () => await getAllUsers(),
   });
 };
