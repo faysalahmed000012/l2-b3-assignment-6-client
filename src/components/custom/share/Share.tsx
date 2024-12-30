@@ -15,10 +15,7 @@ const Share = ({ postId }: { postId: string }) => {
         Share
       </Button>
       {showModal &&
-        ReactDOM.createPortal(
-          <ShareModal postId={postId} setShowModal={setShowModal} />,
-          document.body
-        )}
+        ReactDOM.createPortal(<ShareModal postId={postId} />, document.body)}
     </>
   );
 };

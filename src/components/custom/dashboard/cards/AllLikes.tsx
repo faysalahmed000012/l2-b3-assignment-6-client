@@ -10,15 +10,16 @@ const AllLikes = () => {
   const { user } = useUser();
   const { data: detailedUser } = useQuery({
     queryKey: ["user", user?.email],
-    queryFn: () => getUserDetail(user?.email as string),
+    queryFn: async () => await getUserDetail(user?.email as string),
     enabled: !!user?.email,
   });
 
   const { data: likes } = useQuery({
-    queryKey: ["follow", detailedUser?._id],
-    queryFn: () => getAllLikes(detailedUser?._id as string),
+    queryKey: ["likes", detailedUser?._id],
+    queryFn: async () => await getAllLikes(detailedUser?._id as string),
     enabled: !!detailedUser?._id,
   });
+  console.log(likes);
   return (
     <div>
       <Card className="bg-white">
@@ -30,7 +31,7 @@ const AllLikes = () => {
               </p>
               <div className="flex items-baseline space-x-2">
                 <h2 className="text-3xl font-bold text-gray-900">
-                  {likes?.data || 0}
+                  {(likes?.data && likes.data) || 0}
                 </h2>
               </div>
             </div>

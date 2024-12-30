@@ -11,16 +11,16 @@ const TotalUserPosts = () => {
 
   const { data: detailedUser } = useQuery({
     queryKey: ["user", user?.email],
-    queryFn: () => getUserDetail(user?.email as string),
+    queryFn: async () => await getUserDetail(user?.email as string),
     enabled: !!user?.email,
   });
 
   const { data: posts } = useQuery({
-    queryKey: ["follow", detailedUser?._id],
-    queryFn: () => getPostByUser(detailedUser?._id as string),
+    queryKey: ["posts", detailedUser?._id],
+    queryFn: async () => await getPostByUser(detailedUser?._id as string),
     enabled: !!detailedUser?._id,
   });
-
+  console.log(posts);
   return (
     <div>
       <Card className="bg-white">
@@ -30,7 +30,7 @@ const TotalUserPosts = () => {
               <p className="text-sm font-medium text-gray-500">My Posts</p>
               <div className="flex items-baseline space-x-2">
                 <h2 className="text-3xl font-bold text-gray-900">
-                  {posts?.data || 0}
+                  {(posts?.length && posts.length) || 0}
                 </h2>
                 <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-0.5 rounded-full">
                   Published

@@ -30,7 +30,7 @@ const Followers = () => {
     },
     enabled: !!detailedUser?._id,
   });
-
+  console.log(followData);
   if (!isLoading && !error && !(followData?.data?.followers?.length > 0)) {
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -38,7 +38,7 @@ const Followers = () => {
       </div>
     );
   }
-  console.log(followData?.data?.followers.length);
+
   return (
     <div className="flex flex-col gap-5  w-full">
       <h1 className="text-3xl">All Followers:</h1>

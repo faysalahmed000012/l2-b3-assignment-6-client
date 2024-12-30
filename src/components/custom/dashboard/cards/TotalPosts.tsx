@@ -7,7 +7,7 @@ import { FileText } from "lucide-react";
 const TotalPosts = () => {
   const { data } = useQuery({
     queryKey: ["posts"],
-    queryFn: () => getAllPost(),
+    queryFn: async () => await getAllPost(),
   });
   return (
     <div className="w-full">

@@ -1,5 +1,6 @@
 "use client";
 import TimeAgo from "@/components/custom/post/TimeAgo";
+import ShareModal from "@/components/custom/share/ShareModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import {
   Clock,
   Cookie,
   Heart,
+  Printer,
   Send,
   Star,
   Utensils,
@@ -43,7 +45,8 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
   )?.rating;
 
   const [userRating, setUserRating] = useState(0);
-
+  // const pathname = usePathname();
+  // console.log("pathname", pathname);
   useEffect(() => {
     if (userDefaultRating) setUserRating(userDefaultRating);
     const isLiked = post.likes?.find((like) => like.user === user?._id);
@@ -134,6 +137,10 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
       alert("Please login to comment");
     }
     setReplyTo(null);
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   const averageRating =
@@ -369,21 +376,15 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
                   className="w-full"
                 >
                   <BookmarkPlus className="mr-2 h-4 w-4" /> Save Recipe
-                </Button>
+                </Button> */}
+                <ShareModal postId={post?._id} />
                 <Button
-                  onClick={() => toast("Coming Soon")}
-                  variant="outline"
-                  className="w-full"
-                >
-                  <Share2 className="mr-2 h-4 w-4" /> Share
-                </Button>
-                <Button
-                  onClick={() => toast("Coming Soon")}
+                  onClick={handlePrint}
                   variant="outline"
                   className="w-full"
                 >
                   <Printer className="mr-2 h-4 w-4" /> Print Recipe
-                </Button> */}
+                </Button>
               </div>
               <Separator className="my-6" />
               {/* <h3 className="text-xl font-semibold mb-4">Chef's Notes</h3>

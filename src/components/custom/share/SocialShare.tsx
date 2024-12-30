@@ -1,3 +1,4 @@
+"use client";
 import {
   FacebookIcon,
   FacebookShareButton,
@@ -11,7 +12,11 @@ import {
 
 const SocialShare = ({ postId }: { postId: string }) => {
   const quote = "Crunch Social";
-  const url = `${window.location.href}recipe/${postId}`;
+  let url;
+
+  if (typeof window !== "undefined") {
+    url = window.location.href;
+  }
 
   return (
     <div className="w-full flex items-center justify-evenly">
