@@ -55,19 +55,25 @@ const Subscribe = () => {
             </div>
             <div className="mt-3 flex items-center justify-start gap-4">
               <div className="w-1 h-1 bg-orange-500 rounded-full"></div>
-              <p className="text-lg">Access To all Free posts</p>
+              <p className="text-lg">
+                Like Comment and Share Posts on Social Media
+              </p>
             </div>
             <div className="mt-3 flex items-center justify-start gap-4">
               <div className="w-1 h-1 bg-orange-500 rounded-full"></div>
-              <p className="text-lg">Access To all Free posts</p>
+              <p className="text-lg">Post Any New Recipe</p>
             </div>
             <div className="mt-3 flex items-center justify-start gap-4">
               <div className="w-1 h-1 bg-orange-500 rounded-full"></div>
-              <p className="text-lg">Access To all Free posts</p>
+              <p className="text-lg">See Analytics</p>
             </div>
           </div>
           <div className=" flex items-center justify-center absolute bottom-6 left-5 right-5">
-            <Button className="w-[90%] bg-orange-500">Subscribe</Button>
+            {userDetail?.isPremium == false && (
+              <Button disabled className="w-[90%] bg-orange-500">
+                Current
+              </Button>
+            )}
           </div>
         </div>
         <div className="mt-6 md:mt-0 flex-1 max-w-[350px] h-[500px] border border-orange-500 rounded-xl p-3 relative">
@@ -82,21 +88,27 @@ const Subscribe = () => {
             </div>
             <div className="mt-3 flex items-center justify-start gap-4">
               <div className="w-1 h-1 bg-orange-500 rounded-full"></div>
-              <p className="text-lg">Access To all Free posts</p>
+              <p className="text-lg">Access To all Premium posts</p>
             </div>
             <div className="mt-3 flex items-center justify-start gap-4">
               <div className="w-1 h-1 bg-orange-500 rounded-full"></div>
-              <p className="text-lg">Access To all Free posts</p>
+              <p className="text-lg">All the Features of Free Users</p>
             </div>
             <div className="mt-3 flex items-center justify-start gap-4">
               <div className="w-1 h-1 bg-orange-500 rounded-full"></div>
-              <p className="text-lg">Access To all Free posts</p>
+              <p className="text-lg">Print Post</p>
             </div>
           </div>
           <div className=" flex items-center justify-center absolute bottom-6 left-5 right-5">
-            <Button onClick={handlePayment} className="w-[90%] bg-orange-500">
-              Subscribe
-            </Button>
+            {userDetail?.isPremium ? (
+              <Button disabled className="w-[90%] bg-orange-500">
+                Current
+              </Button>
+            ) : (
+              <Button onClick={handlePayment} className="w-[90%] bg-orange-500">
+                Subscribe
+              </Button>
+            )}
           </div>
         </div>
       </div>

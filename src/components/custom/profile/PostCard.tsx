@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageCircle, Share2, ThumbsUp } from "lucide-react";
+import { MessageCircle, ThumbsUp } from "lucide-react";
 import Image from "next/image";
 
 export function PostCard({ post }: { post: any }) {
@@ -28,10 +28,10 @@ export function PostCard({ post }: { post: any }) {
             <MessageCircle className="w-4 h-4 mr-2" />
             {post.comments}
           </Button>
-          <Button variant="ghost" size="sm">
+          {/* <Button variant="ghost" size="sm">
             <Share2 className="w-4 h-4 mr-2" />
             {post.shares}
-          </Button>
+          </Button> */}
         </div>
       </CardContent>
     </Card>

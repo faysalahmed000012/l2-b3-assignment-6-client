@@ -28,12 +28,15 @@ const ChangePassword = ({ email }: { email: string }) => {
       <Dialog open={open}>
         {/* <Dialog.overlay onClick={() => setOpen(false)} /> */}
         <DialogTrigger asChild>
-          <Button onClick={() => setOpen(true)} variant="outline">
+          <Button
+            onClick={() => setOpen(true)}
+            className="w-full sm:w-auto"
+            variant="outline"
+          >
             Change Password
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <Button onClick={() => setOpen(false)}>Close</Button>
           <form onSubmit={handlePasswordChange} action="">
             <DialogHeader>
               <DialogTitle>Change Password</DialogTitle>
@@ -66,6 +69,7 @@ const ChangePassword = ({ email }: { email: string }) => {
               <Button type="submit">Save changes</Button>
             </DialogFooter>
           </form>
+          <Button onClick={() => setOpen(false)}>Close</Button>
         </DialogContent>
       </Dialog>
     </div>

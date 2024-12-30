@@ -6,14 +6,7 @@ import { deletePost } from "@/services/PostServices";
 import { IPost } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Clock,
-  Cookie,
-  Heart,
-  MessageCircle,
-  Share2,
-  Star,
-} from "lucide-react";
+import { Clock, Cookie, Heart, MessageCircle, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -275,7 +268,7 @@ export default function RecipeCard({ post }: { post: IPost }) {
                 <TooltipContent>Comments</TooltipContent>
               </Tooltip>
             </div>
-            <Tooltip>
+            {/* <Tooltip>
               <TooltipTrigger>
                 <Button
                   variant="ghost"
@@ -286,7 +279,7 @@ export default function RecipeCard({ post }: { post: IPost }) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Share</TooltipContent>
-            </Tooltip>
+            </Tooltip> */}
           </CardFooter>
         </Card>
       </TooltipProvider>

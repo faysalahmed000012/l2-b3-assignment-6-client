@@ -7,6 +7,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { useUser } from "@/context/userProvider";
 import { cn } from "@/lib/utils";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import {
@@ -14,7 +15,6 @@ import {
   FileText,
   LayoutDashboard,
   Receipt,
-  Settings,
   UserCircle,
   UserCog,
   Users,
@@ -31,11 +31,11 @@ const navItems = [
   },
   {
     title: "Edit Profile",
-    url: "/dashboard/profile",
+    url: "/dashboard/editProfile",
     icon: UserCircle,
   },
   {
-    title: "All Posts",
+    title: "Posts",
     url: "/dashboard/posts",
     icon: FileText,
   },
@@ -65,15 +65,46 @@ const navItems = [
     url: "/dashboard/transactions",
     icon: Receipt,
   },
+];
+
+const userNavItems = [
   {
-    title: "Settings",
-    url: "/dashboard/settings",
-    icon: Settings,
+    title: "Overview",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
+    title: "Edit Profile",
+    url: "/dashboard/editProfile",
+    icon: UserCircle,
+  },
+  {
+    title: "My Posts",
+    url: "/dashboard/posts",
+    icon: FileText,
+  },
+  {
+    title: "Followers",
+    url: "/dashboard/followers",
+    icon: Users,
+  },
+  {
+    title: "Following",
+    url: "/dashboard/following",
+    icon: Users,
+  },
+
+  {
+    title: "Subscription",
+    url: "/dashboard/subscribe",
+    icon: CreditCard,
   },
 ];
 
 const DashboardNav = () => {
   const pathname = usePathname();
+  const { user } = useUser();
   return (
     <SidebarMenu>
       <VisuallyHidden.VisuallyHidden>
@@ -83,48 +114,91 @@ const DashboardNav = () => {
           {/* </DialogContent> */}
         </Dialog>
       </VisuallyHidden.VisuallyHidden>
-      {navItems.map((item) => (
-        <SidebarMenuItem key={item.url}>
-          <SidebarMenuButton asChild isActive={pathname === item.url}>
-            <Link
-              href={item.url}
-              className={cn(
-                "flex items-center space-x-3 text-base",
-                pathname === item.url
-                  ? "text-primary font-medium"
-                  : "text-muted-foreground"
+      {user && user.role === "admin"
+        ? navItems.map((item) => (
+            <SidebarMenuItem key={item.url}>
+              <SidebarMenuButton asChild isActive={pathname === item.url}>
+                <Link
+                  href={item.url}
+                  className={cn(
+                    "flex items-center space-x-3 text-base",
+                    pathname === item.url
+                      ? "text-primary font-medium"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+              {item.subItems && (
+                <SidebarMenuSub>
+                  {item.subItems.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.url}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={pathname === subItem.url}
+                      >
+                        <Link
+                          href={subItem.url}
+                          className={cn(
+                            "text-sm",
+                            pathname === subItem.url
+                              ? "text-primary font-medium"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          {subItem.title}
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
               )}
-            >
-              <item.icon className="h-5 w-5" />
-              <span>{item.title}</span>
-            </Link>
-          </SidebarMenuButton>
-          {item.subItems && (
-            <SidebarMenuSub>
-              {item.subItems.map((subItem) => (
-                <SidebarMenuSubItem key={subItem.url}>
-                  <SidebarMenuSubButton
-                    asChild
-                    isActive={pathname === subItem.url}
-                  >
-                    <Link
-                      href={subItem.url}
-                      className={cn(
-                        "text-sm",
-                        pathname === subItem.url
-                          ? "text-primary font-medium"
-                          : "text-muted-foreground"
-                      )}
-                    >
-                      {subItem.title}
-                    </Link>
-                  </SidebarMenuSubButton>
-                </SidebarMenuSubItem>
-              ))}
-            </SidebarMenuSub>
-          )}
-        </SidebarMenuItem>
-      ))}
+            </SidebarMenuItem>
+          ))
+        : userNavItems.map((item) => (
+            <SidebarMenuItem key={item.url}>
+              <SidebarMenuButton asChild isActive={pathname === item.url}>
+                <Link
+                  href={item.url}
+                  className={cn(
+                    "flex items-center space-x-3 text-base",
+                    pathname === item.url
+                      ? "text-primary font-medium"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+              {item.subItems && (
+                <SidebarMenuSub>
+                  {item.subItems.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.url}>
+                      <SidebarMenuSubButton
+                        asChild
+                        isActive={pathname === subItem.url}
+                      >
+                        <Link
+                          href={subItem.url}
+                          className={cn(
+                            "text-sm",
+                            pathname === subItem.url
+                              ? "text-primary font-medium"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          {subItem.title}
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              )}
+            </SidebarMenuItem>
+          ))}
     </SidebarMenu>
   );
 };

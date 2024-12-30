@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IPost } from "@/types";
@@ -125,31 +126,31 @@ export default function TrendingSection({ posts }: { posts: IPost[] }) {
               ))}
             </ul>
           ) : (
-            <div>
-              <p>coming soon</p>
-            </div>
-            // <ul className="space-y-4">
-            //   {topChefs.map((chef, index) => (
-            //     <li key={index} className="flex items-center space-x-3">
-            //       <Avatar className="h-12 w-12">
-            //         <AvatarImage src={chef.image} alt={chef.name} />
-            //         <AvatarFallback>{chef.name[0]}</AvatarFallback>
-            //       </Avatar>
-            //       <div className="flex-1 min-w-0">
-            //         <p className="text-sm font-medium text-gray-900 truncate">
-            //           {chef.name}
-            //         </p>
-            //         <p className="text-xs text-gray-500">{chef.specialty}</p>
-            //         <p className="text-xs text-gray-400">
-            //           {chef.followers.toLocaleString()} followers
-            //         </p>
-            //       </div>
-            //       <Button variant="ghost" size="sm" className="px-2 py-1">
-            //         Follow
-            //       </Button>
-            //     </li>
-            //   ))}
-            // </ul>
+            <ul className="space-y-4">
+              {posts?.slice(0, 3).map((post, index) => (
+                <li key={index} className="flex items-center space-x-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage
+                      src={post.author.profilePicture || ""}
+                      alt={post.author.name}
+                    />
+                    <AvatarFallback>{post.author.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {post.author.name}
+                    </p>
+                    {/* <p className="text-xs text-gray-500">{chef.specialty}</p> */}
+                    <p className="text-xs text-gray-400">
+                      {post.author.followers?.length || 0} followers
+                    </p>
+                  </div>
+                  {/* <Button variant="ghost" size="sm" className="px-2 py-1">
+                    Follow
+                  </Button> */}
+                </li>
+              ))}
+            </ul>
           )}
         </CardContent>
       </Card>

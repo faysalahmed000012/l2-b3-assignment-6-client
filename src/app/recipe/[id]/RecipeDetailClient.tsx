@@ -12,14 +12,11 @@ import { getUserDetail } from "@/services/AuthServices";
 import { addRating, downVote, upVote } from "@/services/PostServices";
 import { IPost } from "@/types";
 import {
-  BookmarkPlus,
   ChefHat,
   Clock,
   Cookie,
   Heart,
-  Printer,
   Send,
-  Share2,
   Star,
   Utensils,
 } from "lucide-react";
@@ -366,7 +363,7 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
                   <Heart className={`mr-2 h-4 w-4  `} />{" "}
                   {isLiked ? "Liked" : "Like"}
                 </Button>
-                <Button
+                {/* <Button
                   onClick={() => toast("Coming Soon")}
                   variant="outline"
                   className="w-full"
@@ -386,7 +383,7 @@ const RecipeDetailClient = ({ post }: { post: IPost }) => {
                   className="w-full"
                 >
                   <Printer className="mr-2 h-4 w-4" /> Print Recipe
-                </Button>
+                </Button> */}
               </div>
               <Separator className="my-6" />
               {/* <h3 className="text-xl font-semibold mb-4">Chef's Notes</h3>

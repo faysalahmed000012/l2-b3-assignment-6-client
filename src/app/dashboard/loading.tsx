@@ -1,10 +1,7 @@
 import { Loader2 } from "lucide-react";
 
-const CustomLoading = () => {
+const loading = () => {
   return (
-    // <div className="flex w-full h-full items-center justify-center">
-    //   <Loader2 className="h-12 w-12 animate-spin text-orange-500" />
-    // </div>
     <div className="fixed inset-0 flex items-center justify-center bg-background/50 backdrop-blur-sm">
       <div className="rounded-lg bg-card p-8 shadow-lg">
         <div className="flex flex-col items-center space-y-4">
@@ -18,4 +15,4 @@ const CustomLoading = () => {
   );
 };
 
-export default CustomLoading;
+export default loading;
